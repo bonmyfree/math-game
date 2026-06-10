@@ -1,0 +1,169 @@
+/* Scoped under `.login-page-scope` (root also has `.loginRoot`) so names like `.card` are not global. */
+.login-page-scope.loginRoot {
+  min-height: 100vh;
+  display: flex;
+  background: var(--login-bg);
+}
+
+.login-page-scope .loginBrand {
+  display: none;
+  width: 50%;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    var(--login-brand-gradient-1) 0%,
+    var(--login-brand-gradient-2) 50%,
+    var(--login-brand-gradient-3) 100%
+  );
+}
+
+.login-page-scope .loginPattern {
+  position: absolute;
+  inset: 0;
+  opacity: var(--login-brand-pattern-opacity);
+  pointer-events: none;
+  background-image: url('data:image/svg+xml,%3Csvg%20width%3D%2760%27%20height%3D%2760%27%20viewBox%3D%270%200%2060%2060%27%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%3E%3Cg%20fill%3D%27none%27%20fill-rule%3D%27evenodd%27%3E%3Cg%20fill%3D%27%23ffffff%27%20fill-opacity%3D%271%27%3E%3Cpath%20d%3D%27M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%27%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E');
+}
+
+.login-page-scope .loginBrandInner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 48px;
+  height: 100%;
+}
+
+.login-page-scope .brandLogo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.login-page-scope .brandMark {
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  background: var(--login-brand-chip-bg);
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--login-brand-chip-border);
+  font-weight: 800;
+  color: var(--login-brand-text);
+}
+
+.login-page-scope .brandName {
+  color: var(--login-brand-text);
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.login-page-scope .brandTitle {
+  color: var(--login-brand-text);
+  font-weight: 800;
+  font-size: 38px;
+  margin: 0 0 12px 0;
+}
+
+.login-page-scope .brandSubtitle {
+  color: var(--login-brand-subtext);
+  font-size: 18px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.login-page-scope .brandFooter {
+  margin-top: 32px;
+  padding-top: 32px;
+  border-top: 1px solid var(--login-brand-divider);
+  color: var(--login-brand-subtext);
+  font-size: 13px;
+}
+
+.login-page-scope .loginPanel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.login-page-scope .loginContainer {
+  width: 100%;
+  max-width: 420px;
+}
+
+.login-page-scope .mobileHeader {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.login-page-scope .mobileTitle {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--login-text-strong);
+  margin: 10px 0 8px 0;
+}
+
+.login-page-scope .mobileSubtitle {
+  color: var(--login-text-muted);
+  margin: 0;
+}
+
+.login-page-scope .card {
+  background: var(--login-white);
+  border-radius: var(--login-card-radius);
+  box-shadow: var(--login-card-shadow-1), var(--login-card-shadow-2);
+  padding: 32px;
+}
+
+.login-page-scope .desktopHeader {
+  display: none;
+  margin-bottom: 28px;
+}
+
+.login-page-scope .desktopTitle {
+  margin: 0 0 8px 0;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--login-text-strong);
+}
+
+.login-page-scope .desktopSubtitle {
+  margin: 0;
+  color: var(--login-text-muted);
+}
+
+.login-page-scope .form {
+  display: grid;
+  gap: 16px;
+}
+
+.login-page-scope .footerInfo {
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid var(--login-border);
+  color: var(--login-text-subtle);
+  font-size: 12px;
+  text-align: center;
+}
+
+@media (min-width: 1024px) {
+  .login-page-scope .loginBrand {
+    display: block;
+  }
+  .login-page-scope .loginPanel {
+    padding: 48px;
+  }
+  .login-page-scope .mobileHeader {
+    display: none;
+  }
+  .login-page-scope .desktopHeader {
+    display: block;
+  }
+  .login-page-scope .card {
+    padding: 40px;
+  }
+}
