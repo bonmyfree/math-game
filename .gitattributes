@@ -1,0 +1,15 @@
+# Normalize line endings in the repository (LF).
+# Avoids "LF will be replaced by CRLF" noise on Windows when core.autocrlf is enabled.
+* text=auto eol=lf
+
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary
