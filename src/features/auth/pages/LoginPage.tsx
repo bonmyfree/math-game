@@ -5,7 +5,6 @@ import { Lock, User } from 'lucide-react'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import LogoFull from '@/assets/img/logo/logo_full.svg'
 import { authService } from '@/features/auth/services/auth.service'
 import { FormField } from '@/shared/forms/fields/FormField'
 import { FormSubmitButton } from '@/shared/forms/fields/FormSubmitButton'
@@ -53,36 +52,10 @@ export default function LoginPage() {
       <style>{styles}</style>
 
       <div className="login-page-scope loginRoot">
-        {/* Left panel (desktop) */}
-        <div className="loginBrand">
-          <div className="loginPattern" />
-          <div className="loginBrandInner">
-            <div className="brandLogo">
-              <img src={LogoFull} alt="Bolt Holdings" style={{ height: 40, width: 'auto' }} />
-            </div>
-
-            <div>
-              <h1 className="brandTitle">{t('auth.login.title')}</h1>
-              <p className="brandSubtitle">{t('auth.login.subtitle')}</p>
-              <div className="brandFooter">
-                {t('auth.login.brandHint', {
-                  defaultValue: 'Sign in with your account to access the system.',
-                })}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Right panel */}
         <div className="loginPanel">
           <div className="loginContainer">
             {/* Mobile header */}
             <div className="mobileHeader">
-              <img
-                src={LogoFull}
-                alt="Bolt Holdings"
-                style={{ height: 40, width: 'auto', margin: '0 auto 16px' }}
-              />
               <h1 className="mobileTitle">{t('auth.login')}</h1>
               <p className="mobileSubtitle">
                 {t('auth.login.mobileSubtitle', {
