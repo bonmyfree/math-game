@@ -1,13 +1,15 @@
 import { createRootRoute, createRoute, createRouter, Outlet } from '@tanstack/react-router'
 
-import { createDigitalTransformRoutes } from '@/features/digital-transform/routes/DigitalTransformRoutes'
-import { createSystemRoutes } from '@/features/system/routes/SystemRoutes'
 import { MainLayout } from '@/shared/components/layout/MainLayout'
 import { ProtectedRoute } from '@/shared/components/layout/ProtectedRoute'
 import NotFoundPage from '@/shared/pages/NotFoundPage'
 
 import {
-  DashboardPage,
+  HomePage,
+  DocumentsPage,
+  RanksPage,
+  HomeworkPage,
+  SettingsPage,
   LoginPage,
   ChangePasswordPage,
   ProfilePage,
@@ -41,13 +43,37 @@ const appLayoutRoute = createRoute({
 const indexRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: '/',
-  component: DashboardPage,
+  component: HomePage,
 })
 
-const dashboardRoute = createRoute({
+const homeRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
-  path: '/dashboard',
-  component: DashboardPage,
+  path: '/home',
+  component: HomePage,
+})
+
+const documentsRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: '/documents',
+  component: DocumentsPage,
+})
+
+const ranksRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: '/ranks',
+  component: RanksPage,
+})
+
+const homeworkRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: '/homework',
+  component: HomeworkPage,
+})
+
+const settingsRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: '/settings',
+  component: SettingsPage,
 })
 
 const profileRoute = createRoute({
@@ -80,13 +106,15 @@ const routeTree = rootRoute.addChildren([
   loginRoute,
   appLayoutRoute.addChildren([
     indexRoute,
-    dashboardRoute,
+    homeRoute,
+    documentsRoute,
+    ranksRoute,
+    homeworkRoute,
+    settingsRoute,
     profileRoute,
     changePasswordRoute,
     userListRoute,
     userRolesRoute,
-    createSystemRoutes(appLayoutRoute),
-    createDigitalTransformRoutes(appLayoutRoute),
     // Other features...
   ]),
 ])

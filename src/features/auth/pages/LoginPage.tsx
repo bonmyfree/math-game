@@ -30,7 +30,7 @@ export default function LoginPage() {
   })
 
   useEffect(() => {
-    if (isAuthenticated) navigate({ to: '/dashboard' })
+    if (isAuthenticated) navigate({ to: '/home' })
   }, [isAuthenticated, navigate])
 
   const form = useForm({

@@ -13,72 +13,23 @@ const vi = {
   'auth.accountInfo': 'Thông tin tài khoản',
 
   // Nav
-  'nav.system': 'Hệ thống',
-  'nav.digitalTransform': 'Chuyển đổi số',
-  'nav.dashboard': 'Tổng quan',
+  'nav.home': 'Trang chủ',
+  'nav.documents': 'Tài liệu',
+  'nav.ranks': 'Bảng xếp hạng',
+  'nav.homework': 'Bài tập',
+  'nav.settings': 'Cài đặt',
   'nav.users': 'Quản lý người dùng',
+
+  // Settings
+  'settings.account': 'Tài khoản',
+  'settings.language': 'Ngôn ngữ',
   'nav.userList': 'Danh sách người dùng',
   'nav.userRoles': 'Phân quyền',
   'nav.reports': 'Báo cáo',
   'nav.collapse': 'Thu gọn',
   'nav.expand': 'Mở rộng',
 
-  // Tabs
-  'tab.systemOperation': 'Vận hành hệ thống',
-  'tab.backUser': 'Người dùng Back',
-  'tab.category': 'Danh mục',
-  'tab.commonCategory': 'Danh mục chung',
-  'tab.department': 'Cấu trúc phòng ban',
-  'tab.departmentBlock': 'Khối',
-  'tab.systemLogLookup': 'Tra cứu log hệ thống',
-  'tab.backFunction': 'Chức năng Back',
-  'tab.backUserGroup': 'Nhóm người dùng',
-  'tab.cdsFolderTree': 'Cây thư mục CĐS',
-  'tab.cdsFolderFuncTree': 'Cây thư mục chức năng CĐS',
-  'tab.cdsDeletedDocs': 'Tài liệu đã xóa',
-  'tab.cdsFrontUser': 'Người dùng Front CĐS',
-  'tab.cdsFrontGroup': 'Nhóm Front CĐS',
-  'tab.cdsProjectManagement': 'Quản lý dự án CĐS',
-  'tab.cdsTeamList': 'Danh sách team',
-  'tab.cdsProjectList': 'Danh sách dự án',
-  'tab.cdsPhaseList': 'Danh sách giai đoạn',
-  'tab.cdsFeatureList': 'Danh sách tính năng',
-  'tab.cdsTaskList': 'Danh sách công việc',
-
-  //Modal
-  'modal.detail.log': 'Chi tiết log hệ thống',
-  'modal.backFunction.addTitle': 'Thêm mới chức năng Back',
-  'modal.backFunction.editTitle': 'Cập nhật chức năng Back',
-  'modal.backFunction.viewTitle': 'Chi tiết chức năng Back',
-
-  'backFunction.form.code': 'Mã chức năng',
-  'backFunction.form.codePlaceholder': 'VD: 0030999',
-  'backFunction.form.name': 'Tên chức năng',
-  'backFunction.form.namePlaceholder': 'VD: Chức năng Back',
-  'backFunction.form.menuName': 'Tên menu',
-  'backFunction.form.menuNamePlaceholder': 'VD: Chức năng Back',
-  'backFunction.form.parentCode': 'Mã chức năng cha',
-  'backFunction.form.rightView': 'Quyền xem',
-  'backFunction.form.rightUpdate': 'Quyền update',
-  'backFunction.form.rightApprove': 'Quyền duyệt',
-  'backFunction.form.showOnMenu': 'Hiện trên menu',
-  'backFunction.form.rightAdmin': 'Quyền admin',
-  'backFunction.form.submitHint': 'Đã nhận dữ liệu (chưa gọi API)',
-  'backFunction.form.updateHint': 'Đã nhận dữ liệu cập nhật (chưa gọi API)',
-  'backFunction.toast.createSuccess': 'Thêm chức năng Back thành công',
-  'backFunction.toast.createFail': 'Thêm chức năng Back thất bại',
-  'backFunction.toast.updateSuccess': 'Sửa chức năng Back thành công',
-  'backFunction.toast.updateFail': 'Sửa chức năng Back thất bại',
-  'backFunction.toast.deleteSuccess': 'Xóa chức năng Back thành công',
-  'backFunction.toast.deleteFail': 'Xóa chức năng Back thất bại',
-
-  'modal.backUserGroup.detailTitle': 'Chi tiết nhóm người dùng',
-  'modal.commonCategory.detailTitle': 'Chi tiết danh mục',
-  'backUserGroup.createNotImplemented': 'Chức năng thêm nhóm người dùng chưa được tích hợp.',
-  'backUserGroup.confirmDelete': 'Xóa nhóm người dùng {{name}}?',
-  'backUserGroup.deleteNotImplemented': 'API xóa nhóm người dùng chưa được tích hợp.',
-
-  'modal.backUserAccount.detailTitle': 'Chi tiết người dùng Back',
+  // Account detail (profile)
   'backUserAccount.detail.pk': 'Mã bản ghi',
   'backUserAccount.detail.status': 'Trạng thái',
   'backUserAccount.detail.createTime': 'Thời gian tạo',
@@ -88,57 +39,6 @@ const vi = {
   'backUserAccount.detail.description': 'Mô tả',
   'backUserAccount.detail.groupRights': 'Danh sách nhóm quyền',
   'backUserAccount.detail.password': 'Mật khẩu',
-  'backUserAccount.confirmDelete': 'Xóa người dùng {{code}}?',
-  'backUserAccount.confirmBulkDelete': 'Xóa {{count}} người dùng đã chọn?',
-  'backUserAccount.deleteNotImplemented': 'API xóa người dùng Back chưa được tích hợp.',
-  'backUserAccount.createNotImplemented': 'Chức năng thêm người dùng Back chưa được tích hợp.',
-
-  'commonCategory.search.categoryType': 'Loại danh mục',
-  'commonCategory.search.allGroups': 'Tất cả loại danh mục',
-  'commonCategory.search.groupUser': 'Danh mục quyền',
-  'commonCategory.search.groupSystem': 'Danh mục hệ thống',
-  'commonCategory.confirmDelete': 'Xóa danh mục {{code}}?',
-  'commonCategory.confirmBulkDelete': 'Xóa {{count}} danh mục đã chọn?',
-  'commonCategory.createNotImplemented': 'Chức năng thêm danh mục chưa được tích hợp.',
-  'commonCategory.deleteNotImplemented': 'API xóa danh mục chưa được tích hợp.',
-
-  'departmentBlock.confirmDelete': 'Xóa khối {{code}}?',
-  'departmentBlock.createNotImplemented': 'Chức năng thêm khối chưa được tích hợp.',
-  'departmentBlock.viewNotImplemented': 'Chi tiết khối {{code}} chưa được tích hợp.',
-  'departmentBlock.deleteNotImplemented': 'API xóa khối chưa được tích hợp.',
-
-  'cdsFrontUser.confirmDelete': 'Xóa người dùng {{code}}?',
-  'cdsFrontUser.createNotImplemented': 'Chức năng thêm người dùng Front CĐS chưa được tích hợp.',
-  'cdsFrontUser.viewNotImplemented': 'Chi tiết người dùng {{code}} chưa được tích hợp.',
-  'cdsFrontUser.deleteNotImplemented': 'API xóa người dùng Front CĐS chưa được tích hợp.',
-
-  'cdsFrontGroup.confirmDelete': 'Xóa nhóm {{code}}?',
-  'cdsFrontGroup.createNotImplemented': 'Chức năng thêm nhóm Front CĐS chưa được tích hợp.',
-  'cdsFrontGroup.viewNotImplemented': 'Chi tiết nhóm {{code}} chưa được tích hợp.',
-  'cdsFrontGroup.deleteNotImplemented': 'API xóa nhóm Front CĐS chưa được tích hợp.',
-
-  'cdsTeam.confirmDelete': 'Xóa team {{name}}?',
-  'cdsTeam.createNotImplemented': 'Chức năng thêm team chưa được tích hợp.',
-  'cdsTeam.viewNotImplemented': 'Chi tiết team {{name}} chưa được tích hợp.',
-  'cdsTeam.deleteNotImplemented': 'API xóa team chưa được tích hợp.',
-
-  'cdsDeletedDoc.restore': 'Khôi phục',
-  'cdsDeletedDoc.bulkRestoreTarget': '{{count}} tài liệu đã chọn',
-  'cdsDeletedDoc.toast.restoreSuccess': 'Khôi phục tài liệu thành công',
-  'cdsDeletedDoc.toast.restoreFail': 'Khôi phục tài liệu thất bại',
-  'cdsDeletedDoc.toast.restorePartial': 'Khôi phục thành công {{success}}/{{total}} tài liệu',
-
-  'cdsProject.createNotImplemented': 'Chức năng thêm dự án chưa được tích hợp.',
-  'cdsProject.viewNotImplemented': 'Chi tiết dự án {{name}} chưa được tích hợp.',
-
-  'cdsPhase.createNotImplemented': 'Chức năng thêm giai đoạn chưa được tích hợp.',
-  'cdsPhase.viewNotImplemented': 'Chi tiết giai đoạn {{name}} chưa được tích hợp.',
-
-  'cdsFeature.createNotImplemented': 'Chức năng thêm tính năng chưa được tích hợp.',
-  'cdsFeature.viewNotImplemented': 'Chi tiết tính năng {{name}} chưa được tích hợp.',
-
-  'cdsTask.createNotImplemented': 'Chức năng thêm công việc chưa được tích hợp.',
-  'cdsTask.viewNotImplemented': 'Chi tiết công việc {{name}} chưa được tích hợp.',
 
   // Common
   'common.loading': 'Đang tải...',
@@ -182,6 +82,7 @@ const vi = {
   'common.updatedInfo': 'Thông tin sau thay đổi',
   'common.reset': 'Khôi phục',
   'common.pagePlaceholder': 'Nội dung trang sẽ được bổ sung sau.',
+
   // Language
   'lang.en': 'Tiếng Anh',
   'lang.vi': 'Tiếng Việt',
@@ -220,6 +121,7 @@ const vi = {
   'form.email': 'Email',
   'form.role': 'Vai trò',
   'form.status': 'Trạng thái',
+
   // Table — cột & thao tác dùng chung
   'table.pageSize': 'phần tử/trang',
   'table.rowNum': 'STT',

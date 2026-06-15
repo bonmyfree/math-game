@@ -3,7 +3,7 @@
  * Chỉ định nghĩa endpoint, không xử lý logic
  */
 
-import type { BackUserData } from '@/features/system/services/system.types'
+import type { BackUserData } from '@/features/auth/types'
 import { CMD, GROUP } from '@/shared/constants'
 import { apiService } from '@/shared/services/api.service'
 import { LoginPayload, LoginResponse } from '@/shared/types'

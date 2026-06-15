@@ -1,21 +1,22 @@
 import { Outlet } from '@tanstack/react-router'
 
 import { useGlobalStore } from '@/shared/stores'
+import { cn } from '@/shared/utils'
 
-import { Header } from './Header'
-import { Sidebar } from './Sidebar'
+import { BottomNavigation } from './BottomNavigation'
 
 export function MainLayout() {
   const collapsed = useGlobalStore((s) => s.sidebarCollapsed)
-  const toggleSidebar = useGlobalStore((s) => s.toggleSidebar)
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <Sidebar collapsed={collapsed} onToggle={toggleSidebar} />
-      <Header collapsed={collapsed} />
+      <BottomNavigation />
+      {/* pb-16 chừa chỗ cho thanh điều hướng dưới cùng trên mobile; md:ml-* bám theo bề rộng sidebar */}
       <main
-        className="pt-16 min-h-screen transition-all duration-300 ease-in-out"
-        style={{ marginLeft: collapsed ? 64 : 240 }}
+        className={cn(
+          'pb-16 md:pb-0 min-h-screen transition-all duration-300 ease-in-out',
+          collapsed ? 'md:ml-16' : 'md:ml-60',
+        )}
       >
         <div className="p-6">
           <Outlet />

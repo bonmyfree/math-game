@@ -1,6 +1,7 @@
 import { useForm } from '@tanstack/react-form'
 import { useMutation } from '@tanstack/react-query'
-import { KeyRound } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
+import { ChevronLeft, KeyRound } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { authApi } from '@/features/auth/services/auth.api'
@@ -45,6 +46,13 @@ export default function ChangePasswordPage() {
   return (
     <div className="relative top-30 flex justify-center">
       <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 min-w-2xl">
+        <Link
+          to="/settings"
+          className="mb-4 inline-flex items-center gap-1 text-sm text-slate-500 transition-colors hover:text-slate-700"
+        >
+          <ChevronLeft size={16} />
+          {t('common.back')}
+        </Link>
         <div className="flex items-center gap-3 mb-6">
           <KeyRound size={22} className="text-blue-500" />
           <h1 className="text-xl font-bold text-slate-800">{t('auth.changePassword')}</h1>
