@@ -97,7 +97,7 @@ export function BottomNavigation() {
                 collapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto',
               )}
             >
-              Bolt Holding
+              BonMyFree
             </span>
           </div>
         </button>

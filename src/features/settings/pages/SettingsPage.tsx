@@ -1,5 +1,5 @@
 import { useNavigate } from '@tanstack/react-router'
-import { Settings as SettingsIcon, Globe, User, KeyRound, LogOut, ChevronRight } from 'lucide-react'
+import { Settings as SettingsIcon, Globe, KeyRound, LogOut, ChevronRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { authService } from '@/features/auth/services/auth.service'
@@ -42,7 +42,11 @@ export default function SettingsPage() {
       </div>
 
       {/* Thông tin tài khoản */}
-      <div className="flex items-center gap-4 rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
+      <button
+        type="button"
+        onClick={() => navigate({ to: '/account/profile' })}
+        className="flex w-full items-center gap-4 rounded-2xl border border-slate-100 bg-white p-5 text-left shadow-sm transition-colors hover:bg-slate-50"
+      >
         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 font-semibold text-white shadow-sm">
           {user?.avatar ? (
             <img
@@ -58,7 +62,7 @@ export default function SettingsPage() {
           <p className="truncate font-semibold text-slate-800">{user?.userName || 'User'}</p>
           <p className="truncate text-sm text-slate-500">{user?.email || user?.role || ''}</p>
         </div>
-      </div>
+      </button>
 
       {/* Ngôn ngữ */}
       <div className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
@@ -91,16 +95,6 @@ export default function SettingsPage() {
 
       {/* Hành động tài khoản */}
       <div className="divide-y divide-slate-100 overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm">
-        <button
-          type="button"
-          onClick={() => navigate({ to: '/account/profile' })}
-          className="flex w-full items-center gap-3 px-5 py-4 text-sm text-slate-700 transition-colors hover:bg-slate-50"
-        >
-          <User size={18} className="shrink-0 text-slate-400" />
-          <span className="flex-1 text-left">{t('auth.accountInfo')}</span>
-          <ChevronRight size={16} className="text-slate-300" />
-        </button>
-
         <button
           type="button"
           onClick={() => navigate({ to: '/account/change-password' })}
