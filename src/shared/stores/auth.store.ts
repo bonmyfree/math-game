@@ -59,38 +59,9 @@ type AuthActions = {
   clearAuth: () => void
 }
 
-// ─── Dev bypass ───────────────────────────────────────────────────────────────
-const DEV_BYPASS_AUTH = import.meta.env.DEV
-
-const devBypassState: Partial<AuthState> = {
-  accessToken: 'mock-token',
-  refreshToken: 'mock-refresh',
-  // +365 ngày tính bằng ms: 365 * 24 * 60 * 60 * 1000
-  accessTokenExpiresAt: Date.now() + 31536000000,
-  tokenExpiresIn: 60000,
-  user: {
-    role: 'admin',
-    userName: 'Admintrator',
-    loginTime: '23/04/2026 18:21:54',
-    session: 'mock-session',
-  },
-  isAuthenticated: true,
-  permissions: {
-    '0000000': ['view'],
-    '0030002': ['view', 'update'],
-    '0030003': ['view', 'update'],
-    // '0010000': ['view'],
-    // '0010001': ['view', 'update'],
-    // '0010002': ['view'],
-    // '0010003': ['view', 'update'],
-    // '0020000': ['view'],
-    // '0030000': ['view', 'update'],
-    // '0030001': ['view', 'update'],
-    // '0030002': ['view', 'update'],
-  },
-}
-
 // ─── Initial state ────────────────────────────────────────────────────────────
+// Luôn bắt đầu ở trạng thái CHƯA đăng nhập — xác thực qua màn đăng nhập
+// (login hardcode admin/123456 trong auth.service).
 const baseInitialState: AuthState = {
   accessToken: null,
   refreshToken: null,
@@ -104,10 +75,7 @@ const baseInitialState: AuthState = {
   error: null,
 }
 
-const initialState: AuthState = {
-  ...baseInitialState,
-  ...(DEV_BYPASS_AUTH ? devBypassState : {}),
-}
+const initialState: AuthState = baseInitialState
 
 // ─── Store ────────────────────────────────────────────────────────────────────
 export const useAuthStore = create<AuthState & AuthActions>()(
@@ -189,8 +157,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
   ),
 )
 
-// Trailing sync: phủ trường hợp persist sync (không có gì để rehydrate) hoặc
-// đang ở DEV bypass (initialState đã có 'mock-token').
+// Trailing sync: phủ trường hợp persist sync (không có gì để rehydrate).
 const _initial = useAuthStore.getState()
 tokenProvider.set({
   accessToken: _initial.accessToken,

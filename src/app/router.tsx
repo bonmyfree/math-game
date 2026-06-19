@@ -6,6 +6,7 @@ import NotFoundPage from '@/shared/pages/NotFoundPage'
 
 import {
   HomePage,
+  GameListPage,
   DocumentsPage,
   RanksPage,
   HomeworkPage,
@@ -50,6 +51,12 @@ const homeRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: '/home',
   component: HomePage,
+})
+
+const gameListRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: '/games/$grade',
+  component: GameListPage,
 })
 
 const documentsRoute = createRoute({
@@ -107,6 +114,7 @@ const routeTree = rootRoute.addChildren([
   appLayoutRoute.addChildren([
     indexRoute,
     homeRoute,
+    gameListRoute,
     documentsRoute,
     ranksRoute,
     homeworkRoute,

@@ -3,7 +3,6 @@ import { useMutation } from '@tanstack/react-query'
 import { UserPlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { userApi } from '@/features/users/api/userApi'
 import {
   createUserSchema,
   type CreateUserValues,
@@ -37,7 +36,8 @@ export function UserCreateModal({ open, onOpenChange }: Props) {
   const { t } = useTranslation()
 
   const createMutation = useMutation({
-    mutationFn: userApi.create,
+    // TẠM THỜI: không gọi API — giả lập tạo người dùng thành công.
+    mutationFn: async (data: CreateUserValues) => ({ iRc: 1, data }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['users'] })
     },

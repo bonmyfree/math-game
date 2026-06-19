@@ -20,6 +20,16 @@ const vi = {
   'nav.settings': 'Cài đặt',
   'nav.users': 'Quản lý người dùng',
 
+  // Home
+  'home.greeting': 'Chào mừng bạn! 👋',
+  'home.pickGrade': 'Chọn lớp để bắt đầu chơi các trò chơi toán học',
+  'home.gradeLabel': 'Lớp',
+  'home.play': 'Vào lớp',
+  'home.gameListSoon': 'Danh sách trò chơi cho lớp này sẽ sớm có mặt.',
+
+  // Games
+  'games.subtitle': 'Chọn một trò chơi để bắt đầu',
+
   // Settings
   'settings.account': 'Tài khoản',
   'settings.language': 'Ngôn ngữ',

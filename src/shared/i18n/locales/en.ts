@@ -22,6 +22,16 @@ const en: I18nKeys = {
   'nav.settings': 'Settings',
   'nav.users': 'User Management',
 
+  // Home
+  'home.greeting': 'Welcome! 👋',
+  'home.pickGrade': 'Pick a grade to start playing math games',
+  'home.gradeLabel': 'Grade',
+  'home.play': 'Enter class',
+  'home.gameListSoon': 'The game list for this grade is coming soon.',
+
+  // Games
+  'games.subtitle': 'Pick a game to start',
+
   // Settings
   'settings.account': 'Account',
   'settings.language': 'Language',

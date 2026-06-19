@@ -22,6 +22,9 @@ export const ProfilePage = withSuspense(lazy(() => import('@/features/auth/pages
 // Home
 export const HomePage = withSuspense(lazy(() => import('@/features/home/pages/HomePage')))
 
+// Games
+export const GameListPage = withSuspense(lazy(() => import('@/features/games/pages/GameListPage')))
+
 // Feature menus (placeholder template pages)
 export const DocumentsPage = withSuspense(
   lazy(() => import('@/features/documents/pages/DocumentsPage')),

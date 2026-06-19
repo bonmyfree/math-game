@@ -1,84 +1,63 @@
 /**
- * AUTH SERVICE: Xử lý luồng logic
- * Business logic: flow login, load permissions, logout...
- * Dùng authApi để gọi HTTP, useAuthStore để quản lý state
+ * AUTH SERVICE: Xử lý luồng logic xác thực
  *
- * Quy ước:
- * - login: success -> trả về LoginResponse; failure -> throw Error
- *   (không tự toast; caller có thể bọc qua submitWithToast để hiển thị)
+ * TẠM THỜI: login được hardcode (admin / 123456) — KHÔNG gọi API.
+ * Khi có backend thật, thay phần kiểm tra hardcode bằng authApi.login.
  */
 
 import i18n from '@/shared/i18n'
 import { toastService } from '@/shared/services/toast.service'
 import { useAuthStore } from '@/shared/stores'
-import { LoginPayload, LoginResponse, mapUser, UserPermissionsResponse } from '@/shared/types'
+import type { LoginPayload } from '@/shared/types'
+import type { UserPermissions } from '@/shared/types/permission.types'
 
-import { authApi } from './auth.api'
-import { mapPermissions } from '../utils/permission.util'
+// ─── Thông tin đăng nhập hardcode ──────────────────────────────────────────────
+const HARDCODED_CREDENTIALS = { user: 'admin', pass: '123456' }
+
+// +365 ngày tính bằng ms
+const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000
+
+const HARDCODED_PERMISSIONS: UserPermissions = {
+  '0000000': ['view'],
+  '0030002': ['view', 'update'],
+  '0030003': ['view', 'update'],
+}
 
 export const authService = {
-  login: async (payload: LoginPayload): Promise<LoginResponse> => {
+  /**
+   * Login tạm hardcode admin/123456 — không gọi API.
+   * Trả về `{ iRc: 1 }` để submitWithToast nhận diện success; throw Error khi sai.
+   */
+  login: async (payload: LoginPayload): Promise<{ iRc: number }> => {
     const store = useAuthStore.getState()
     store.loginStart()
 
-    try {
-      const res = await authApi.login(payload)
+    const valid =
+      payload.user === HARDCODED_CREDENTIALS.user && payload.pass === HARDCODED_CREDENTIALS.pass
 
-      if (res.iRc !== 1) {
-        const msg = res.sRs || i18n.t('toast.loginFailed')
-        store.loginFailure(msg)
-        throw new Error(msg)
-      }
-
-      const userData = mapUser(res.data[0])
-      const { accessToken, refreshToken, expires_in: expiresIn } = res.token
-
-      store.loginSuccess({
-        accessToken,
-        refreshToken,
-        expiresIn,
-        user: userData,
-      })
-
-      await authService.loadPermissions(userData.role)
-
-      return res
-    } catch (err: unknown) {
-      const msg = (err as { message?: string })?.message ?? i18n.t('toast.loginFailed')
-      const state = useAuthStore.getState()
-      if (state.isLoading) state.loginFailure(msg)
-      throw err instanceof Error ? err : new Error(msg)
+    if (!valid) {
+      const msg = i18n.t('toast.loginFailed')
+      store.loginFailure(msg)
+      throw new Error(msg)
     }
-  },
 
-  loadPermissions: async (username: string): Promise<void> => {
-    const store = useAuthStore.getState()
-    store.setLoadingPermissions(true)
+    store.loginSuccess({
+      accessToken: 'mock-token',
+      refreshToken: 'mock-refresh',
+      expiresIn: ONE_YEAR_MS,
+      user: {
+        role: 'admin',
+        userName: 'Admin',
+        loginTime: '',
+      },
+    })
+    store.setPermissions(HARDCODED_PERMISSIONS)
 
-    try {
-      const res: UserPermissionsResponse = await authApi.getUserPermissions(username)
-
-      if (res.iRc === 1 && Array.isArray(res.data)) {
-        const permissions = mapPermissions(res.data)
-        store.setPermissions(permissions)
-      } else {
-        console.warn('[Auth] Load permissions failed:', res.sRs)
-        store.setLoadingPermissions(false)
-      }
-    } catch (error) {
-      console.warn('[Auth] Load permissions error:', error)
-      store.setLoadingPermissions(false)
-    }
+    return { iRc: 1 }
   },
 
   logout: async (): Promise<void> => {
-    try {
-      await authApi.logout()
-    } catch {
-      // Luôn clear local state dù API lỗi
-    } finally {
-      useAuthStore.getState().clearAuth()
-      toastService.info(i18n.t('toast.logoutSuccess'))
-    }
+    useAuthStore.getState().clearAuth()
+    toastService.info(i18n.t('toast.logoutSuccess'))
   },
 }
