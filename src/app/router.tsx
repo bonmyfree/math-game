@@ -7,6 +7,12 @@ import NotFoundPage from '@/shared/pages/NotFoundPage'
 import {
   HomePage,
   GameListPage,
+  CountingGamePage,
+  AdditionGamePage,
+  SubtractionGamePage,
+  CompareGamePage,
+  ShapesGamePage,
+  QuizGamePage,
   DocumentsPage,
   RanksPage,
   HomeworkPage,
@@ -57,6 +63,43 @@ const gameListRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: '/games/$grade',
   component: GameListPage,
+})
+
+// Game cụ thể (Lớp 1). Dùng đường dẫn 2 đoạn để không trùng `/games/$grade`.
+const countingGameRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: '/games/1/counting',
+  component: CountingGamePage,
+})
+
+const additionGameRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: '/games/1/addition',
+  component: AdditionGamePage,
+})
+
+const subtractionGameRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: '/games/1/subtraction',
+  component: SubtractionGamePage,
+})
+
+const compareGameRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: '/games/1/compare',
+  component: CompareGamePage,
+})
+
+const shapesGameRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: '/games/1/shapes',
+  component: ShapesGamePage,
+})
+
+const quizGameRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: '/games/1/quiz',
+  component: QuizGamePage,
 })
 
 const documentsRoute = createRoute({
@@ -115,6 +158,12 @@ const routeTree = rootRoute.addChildren([
     indexRoute,
     homeRoute,
     gameListRoute,
+    countingGameRoute,
+    additionGameRoute,
+    subtractionGameRoute,
+    compareGameRoute,
+    shapesGameRoute,
+    quizGameRoute,
     documentsRoute,
     ranksRoute,
     homeworkRoute,

@@ -24,6 +24,22 @@ export const HomePage = withSuspense(lazy(() => import('@/features/home/pages/Ho
 
 // Games
 export const GameListPage = withSuspense(lazy(() => import('@/features/games/pages/GameListPage')))
+export const CountingGamePage = withSuspense(
+  lazy(() => import('@/features/games/pages/CountingGamePage')),
+)
+export const AdditionGamePage = withSuspense(
+  lazy(() => import('@/features/games/pages/AdditionGamePage')),
+)
+export const SubtractionGamePage = withSuspense(
+  lazy(() => import('@/features/games/pages/SubtractionGamePage')),
+)
+export const CompareGamePage = withSuspense(
+  lazy(() => import('@/features/games/pages/CompareGamePage')),
+)
+export const ShapesGamePage = withSuspense(
+  lazy(() => import('@/features/games/pages/ShapesGamePage')),
+)
+export const QuizGamePage = withSuspense(lazy(() => import('@/features/games/pages/QuizGamePage')))
 
 // Feature menus (placeholder template pages)
 export const DocumentsPage = withSuspense(

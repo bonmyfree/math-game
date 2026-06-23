@@ -20,8 +20,8 @@ import { UserCreateModal } from '../components/UserCreateModal'
 
 /**
  * Mock data CH? t?n t?i trong dev build.
- * Vite/esbuild thay `import.meta.env.DEV` -> `false` ? production v� dead-code-eliminate
- * to�n b? literal m?ng du?i d�y � bundle prod ch? c�n `[]`.
+ * Vite/esbuild thay `import.meta.env.DEV` -> `false` ở production và dead-code-eliminate
+ * toàn bộ literal mảng dưới đây ở bundle prod chỉ còn `[]`.
  */
 const MOCK_USERS: UserInfo[] = import.meta.env.DEV
   ? [
@@ -43,7 +43,7 @@ const MOCK_USERS: UserInfo[] = import.meta.env.DEV
       },
       {
         id: '3',
-        fullName: 'L� Van C',
+        fullName: 'Lê Văn C',
         email: 'levanc@email.com',
         role: 'Viewer',
         status: 'inactive',
@@ -59,7 +59,7 @@ const MOCK_USERS: UserInfo[] = import.meta.env.DEV
       },
       {
         id: '5',
-        fullName: 'Ho�ng Van E',
+        fullName: 'Hoàng Văn E',
         email: 'hoangvane@email.com',
         role: 'Viewer',
         status: 'active',
@@ -231,7 +231,7 @@ export function UserListPage() {
   //       <div className="flex items-center gap-2 text-red-500">
   //         <AlertCircle size={20} />
   //         <span className="text-sm font-medium">
-  //           {(error as { message?: string })?.message || 'Kh�ng th? t?i d? li?u'}
+  //           {(error as { message?: string })?.message || 'Không thể tải dữ liệu'}
   //         </span>
   //       </div>
   //       <button
@@ -270,7 +270,7 @@ export function UserListPage() {
             {isFetching && !isLoading && (
               <div className="flex items-center gap-1.5 text-xs text-slate-400">
                 <Loader2 size={12} className="animate-spin" />
-                �ang c?p nh?t...
+                Đang cập nhật...
               </div>
             )}
 

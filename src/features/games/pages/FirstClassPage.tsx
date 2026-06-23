@@ -13,6 +13,8 @@ type Game = {
   gradient: string
   /** Màu chấm sáng trang trí (mờ) phía sau */
   glow: string
+  /** Đường dẫn tới game (nếu đã làm xong). */
+  to?: string
 }
 
 const GAMES: Game[] = [
@@ -22,6 +24,7 @@ const GAMES: Game[] = [
     icon: Hash,
     gradient: 'from-rose-400 to-pink-500',
     glow: 'bg-rose-300',
+    to: '/games/1/counting',
   },
   {
     id: 'addition',
@@ -29,6 +32,7 @@ const GAMES: Game[] = [
     icon: Plus,
     gradient: 'from-amber-400 to-orange-500',
     glow: 'bg-amber-300',
+    to: '/games/1/addition',
   },
   {
     id: 'subtraction',
@@ -36,6 +40,7 @@ const GAMES: Game[] = [
     icon: Minus,
     gradient: 'from-emerald-400 to-teal-500',
     glow: 'bg-emerald-300',
+    to: '/games/1/subtraction',
   },
   {
     id: 'compare',
@@ -43,6 +48,7 @@ const GAMES: Game[] = [
     icon: Scale,
     gradient: 'from-sky-400 to-blue-500',
     glow: 'bg-sky-300',
+    to: '/games/1/compare',
   },
   {
     id: 'shapes',
@@ -50,6 +56,7 @@ const GAMES: Game[] = [
     icon: Shapes,
     gradient: 'from-violet-400 to-purple-500',
     glow: 'bg-violet-300',
+    to: '/games/1/shapes',
   },
   {
     id: 'quiz',
@@ -57,6 +64,7 @@ const GAMES: Game[] = [
     icon: Brain,
     gradient: 'from-fuchsia-400 to-pink-500',
     glow: 'bg-fuchsia-300',
+    to: '/games/1/quiz',
   },
 ]
 
@@ -96,10 +104,11 @@ export default function FirstClassPage() {
 
         {/* Lưới game 3 cột, ô vuông */}
         <div className="grid grid-cols-3 gap-3">
-          {GAMES.map(({ id, name, icon: Icon, gradient, glow }) => (
+          {GAMES.map(({ id, name, icon: Icon, gradient, glow, to }) => (
             <button
               key={id}
               type="button"
+              onClick={() => to && navigate({ to })}
               className={`group relative flex aspect-square flex-col items-center justify-center gap-2.5 overflow-hidden rounded-3xl bg-gradient-to-br ${gradient} p-3 text-white shadow-lg shadow-slate-200/60 transition-all duration-300 active:scale-[0.96] hover:-translate-y-1 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-white/50`}
             >
               {/* Quầng sáng mờ */}
