@@ -104,12 +104,13 @@ export default function FirstClassPage() {
 
         {/* Lưới game 3 cột, ô vuông */}
         <div className="grid grid-cols-3 gap-3">
-          {GAMES.map(({ id, name, icon: Icon, gradient, glow, to }) => (
+          {GAMES.map(({ id, name, icon: Icon, gradient, glow, to }, i) => (
             <button
               key={id}
               type="button"
               onClick={() => to && navigate({ to })}
-              className={`group relative flex aspect-square flex-col items-center justify-center gap-2.5 overflow-hidden rounded-3xl bg-gradient-to-br ${gradient} p-3 text-white shadow-lg shadow-slate-200/60 transition-all duration-300 active:scale-[0.96] hover:-translate-y-1 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-white/50`}
+              style={{ animationDelay: `${i * 80}ms` }}
+              className={`group animate-game-pop-in relative flex aspect-square flex-col items-center justify-center gap-2.5 overflow-hidden rounded-3xl bg-gradient-to-br ${gradient} p-3 text-white shadow-lg shadow-slate-200/60 transition-all duration-300 active:scale-[0.96] hover:-translate-y-1 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-white/50`}
             >
               {/* Quầng sáng mờ */}
               <span

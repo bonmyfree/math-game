@@ -59,12 +59,13 @@ export default function HomePage() {
 
         {/* Lưới các lớp */}
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-          {GRADES.map(({ grade, icon: Icon, gradient, glow }) => (
+          {GRADES.map(({ grade, icon: Icon, gradient, glow }, i) => (
             <button
               key={grade}
               type="button"
               onClick={() => navigate({ to: '/games/$grade', params: { grade: String(grade) } })}
-              className={`group relative flex h-44 flex-col justify-between overflow-hidden rounded-3xl bg-gradient-to-br ${gradient} p-4 text-left text-white shadow-lg shadow-slate-200/60 transition-all duration-300 active:scale-[0.97] hover:-translate-y-1 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-white/50`}
+              style={{ animationDelay: `${i * 80}ms` }}
+              className={`group animate-game-pop-in relative flex h-44 flex-col justify-between overflow-hidden rounded-3xl bg-gradient-to-br ${gradient} p-4 text-left text-white shadow-lg shadow-slate-200/60 transition-all duration-300 active:scale-[0.97] hover:-translate-y-1 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-white/50`}
             >
               {/* Chấm trang trí mờ */}
               <span

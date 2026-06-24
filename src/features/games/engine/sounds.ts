@@ -1,6 +1,9 @@
-// Âm thanh phản hồi cho game, tạo bằng Web Audio API nên không cần file asset.
-// - Đúng: "ting ting" (hai nốt cao, trong trẻo, đi lên).
-// - Sai: "tè tè" (hai nốt trầm, đi xuống).
+// Âm thanh phản hồi cho game.
+// - Đúng (thắng): phát file yeah.mp3 (tiếng reo hò).
+// - Sai (thua): hiệu ứng "rung run" tổng hợp bằng Web Audio.
+// - Vào game: tiếng chuông gió long lanh tổng hợp bằng Web Audio.
+
+import yeahUrl from '@/assets/sound/yeah.mp3'
 
 type WindowWithAudio = Window & typeof globalThis & { webkitAudioContext?: typeof AudioContext }
 
@@ -74,18 +77,133 @@ function prepare(): AudioContext | null {
   return c
 }
 
-/** "Ting ting" — khen khi trả lời đúng. */
-export function playCorrect() {
-  const c = prepare()
-  if (!c) return
-  beep(c, 1318.5, 0, 0.12, 'triangle', 0.25) // E6
-  beep(c, 1760, 0.11, 0.2, 'triangle', 0.25) // A6
+// ─── Tiếng "thắng": phát file yeah.mp3 ──────────────────────────────────────
+let yeahAudio: HTMLAudioElement | null = null
+let yeahFadeTimer: number | null = null
+
+function getYeah(): HTMLAudioElement | null {
+  if (typeof Audio === 'undefined') return null
+  if (!yeahAudio) {
+    yeahAudio = new Audio(yeahUrl)
+    yeahAudio.preload = 'auto'
+  }
+  return yeahAudio
 }
 
-/** "Tè tè" — báo khi trả lời sai. */
+function clearYeahFade() {
+  if (yeahFadeTimer !== null) {
+    window.clearInterval(yeahFadeTimer)
+    yeahFadeTimer = null
+  }
+}
+
+// ─── Mở khóa audio ở lần tương tác đầu tiên ─────────────────────────────────
+// Trình duyệt chặn âm thanh tới khi người dùng chạm/bấm. Ta nghe sự kiện đầu
+// tiên (một lần) để resume AudioContext và "mồi" thẻ <audio>.
+let audioInitialized = false
+
+function unlockAudio() {
+  const c = getCtx()
+  if (c && c.state === 'suspended') void c.resume()
+  // Mồi thẻ audio trong phạm vi cử chỉ người dùng (cần cho iOS/Safari).
+  const a = getYeah()
+  if (a) {
+    a.muted = true
+    a.play()
+      .then(() => {
+        a.pause()
+        a.currentTime = 0
+        a.muted = false
+      })
+      .catch(() => {
+        a.muted = false
+      })
+  }
+}
+
+export function initAudio() {
+  if (audioInitialized || typeof window === 'undefined') return
+  audioInitialized = true
+  const handler = () => {
+    unlockAudio()
+    window.removeEventListener('pointerdown', handler)
+    window.removeEventListener('touchstart', handler)
+    window.removeEventListener('keydown', handler)
+  }
+  window.addEventListener('pointerdown', handler)
+  window.addEventListener('touchstart', handler)
+  window.addEventListener('keydown', handler)
+}
+
+/** Khen khi trả lời đúng — phát tiếng reo "yeah". */
+export function playCorrect() {
+  if (muted) return
+  const a = getYeah()
+  if (!a) return
+  clearYeahFade()
+  a.volume = 1
+  a.currentTime = 0
+  void a.play().catch(() => {})
+}
+
+/** Dừng tiếng "yeah" (fade nhẹ) — gọi khi chuyển sang câu tiếp theo. */
+export function stopCorrect() {
+  const a = yeahAudio
+  if (!a || a.paused) return
+  clearYeahFade()
+  yeahFadeTimer = window.setInterval(() => {
+    a.volume = Math.max(0, a.volume - 0.15)
+    if (a.volume <= 0.001) {
+      a.pause()
+      a.currentTime = 0
+      a.volume = 1
+      clearYeahFade()
+    }
+  }, 20)
+}
+
+/** Báo khi trả lời sai — hiệu ứng "rung run ngộ nghĩnh" (S7). */
 export function playWrong() {
   const c = prepare()
   if (!c) return
-  beep(c, 196, 0, 0.18, 'sawtooth', 0.18) // G3
-  beep(c, 146.8, 0.16, 0.28, 'sawtooth', 0.18) // D3
+  const t0 = c.currentTime
+  const osc = c.createOscillator()
+  const gain = c.createGain()
+  const lfo = c.createOscillator()
+  const lfoGain = c.createGain()
+  osc.type = 'triangle'
+  osc.frequency.setValueAtTime(330, t0)
+  osc.frequency.exponentialRampToValueAtTime(200, t0 + 0.5)
+  lfo.frequency.value = 14 // độ rung
+  lfoGain.gain.value = 30
+  lfo.connect(lfoGain)
+  lfoGain.connect(osc.frequency)
+  gain.gain.setValueAtTime(0.0001, t0)
+  gain.gain.exponentialRampToValueAtTime(0.22, t0 + 0.03)
+  gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.55)
+  osc.connect(gain)
+  gain.connect(c.destination)
+  osc.start(t0)
+  lfo.start(t0)
+  osc.stop(t0 + 0.6)
+  lfo.stop(t0 + 0.6)
+}
+
+function chime(c: AudioContext) {
+  ;[784, 880, 1047, 1319, 1568, 1760].forEach((f, i) => beep(c, f, i * 0.08, 0.7, 'sine', 0.22))
+}
+
+/** Tiếng khi vào game — "chuông gió long lanh" (T6). */
+export function playEnter() {
+  if (muted) return
+  const c = getCtx()
+  if (!c) return
+  if (c.state === 'suspended') {
+    // Chưa có tương tác: phát ngay khi audio được mở khóa (resume xong).
+    c.resume()
+      .then(() => chime(c))
+      .catch(() => {})
+    return
+  }
+  chime(c)
 }

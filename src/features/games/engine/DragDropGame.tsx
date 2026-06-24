@@ -2,7 +2,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { ChevronLeft, RotateCcw, Sparkles, Star, Volume2, VolumeX } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { isMuted, playCorrect, playWrong, setMuted } from './sounds'
+import { isMuted, playCorrect, playEnter, playWrong, setMuted, stopCorrect } from './sounds'
 
 import type { GameOption, GameRound, RoundGenerator } from './types'
 import type { ReactNode } from 'react'
@@ -43,7 +43,13 @@ export function DragDropGame({ title, subtitle, generate }: Props) {
     roundRef.current = round
   }, [round])
 
+  // Tiếng chuông khi vào game (điều hướng từ một cú chạm nên audio được mở khóa).
+  useEffect(() => {
+    playEnter()
+  }, [])
+
   const nextRound = useCallback(() => {
+    stopCorrect() // tắt tiếng "yeah" khi sang câu mới
     setStatus('idle')
     setWrongId(null)
     setRound(generate())

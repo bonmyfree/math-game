@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Nghe thử âm thanh game</title>
+    <style>
+      :root {
+        font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+      }
+      body {
+        margin: 0;
+        padding: 24px 16px 56px;
+        background: linear-gradient(to bottom, #eef2ff, #f0f9ff, #fff);
+        color: #1e293b;
+      }
+      h1 {
+        text-align: center;
+        font-size: 22px;
+        margin: 0 0 4px;
+      }
+      p.sub {
+        text-align: center;
+        color: #64748b;
+        margin: 0 0 24px;
+        font-size: 14px;
+      }
+      .group {
+        max-width: 520px;
+        margin: 0 auto 28px;
+      }
+      .group > h2 {
+        font-size: 17px;
+        margin: 0 0 12px;
+        padding-left: 4px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+      button {
+        border: none;
+        border-radius: 14px;
+        padding: 14px 10px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #fff;
+        cursor: pointer;
+        text-align: left;
+        line-height: 1.25;
+        transition:
+          transform 0.1s,
+          filter 0.1s;
+      }
+      button:active {
+        transform: scale(0.96);
+        filter: brightness(1.08);
+      }
+      button b {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 8px;
+        padding: 0 7px;
+        margin-right: 6px;
+      }
+      .win {
+        background: linear-gradient(to bottom right, #34d399, #14b8a6);
+      }
+      .lose {
+        background: linear-gradient(to bottom right, #fb923c, #f43f5e);
+      }
+      .cur {
+        background: linear-gradient(to bottom right, #94a3b8, #64748b);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🎉 Nghe thử âm thanh game</h1>
+    <p class="sub">Bấm nghe rồi báo mình số bạn thích — ví dụ "Thắng T5, Thua S2".</p>
+
+    <div class="group">
+      <h2>🏆 THẮNG (vui tươi)</h2>
+      <div class="grid">
+        <button class="win" onclick="winFanfare()"><b>T1</b>Kèn chiến thắng 🎺</button>
+        <button class="win" onclick="winSparkle()"><b>T2</b>Lấp lánh thần tiên ✨</button>
+        <button class="win" onclick="winTada()"><b>T3</b>Ta-da! hợp âm 🎊</button>
+        <button class="win" onclick="winRainbow()"><b>T4</b>Cầu vồng vút lên 🌈</button>
+        <button class="win" onclick="winCoins()"><b>T5</b>Mưa xu vàng 🪙</button>
+        <button class="win" onclick="winChimes()"><b>T6</b>Chuông gió long lanh 🎐</button>
+        <button class="win" onclick="winCheer()"><b>T7</b>Reo hò tưng bừng 📣</button>
+        <button class="win" onclick="winTune()"><b>T8</b>Nhạc thắng nhún nhảy 🎵</button>
+        <button class="win" onclick="winLevelup()"><b>T9</b>Lên cấp 8-bit 🕹️</button>
+        <button class="win" onclick="winMagic()"><b>T10</b>Phép màu lung linh 🪄</button>
+        <button class="win" onclick="speak('Yeah!')"><b>T11</b>Hô "Yeah!" 🗣️</button>
+        <button class="win" onclick="speak('Yeah! Tuyệt vời!')"><b>T12</b>"Yeah! Tuyệt vời!" 🎙️</button>
+        <button class="win" onclick="winCrowd()"><b>T13</b>Đám đông reo + vỗ tay 👏</button>
+        <button class="win" onclick="winYeahCombo()"><b>T14</b>Yeah! + kèn + vỗ tay 🥳</button>
+        <button class="win" onclick="winKidsCheer()"><b>T15</b>Trẻ con reo hò (tổng hợp) 🧒</button>
+        <button class="win" onclick="speakPitch('Yay! Hooray!', 1.8)"><b>T16</b>"Yay! Hooray!" giọng cao 🙌</button>
+        <button class="win" onclick="winKidsParty()"><b>T17</b>Tiệc trẻ con: reo + giọng + vỗ tay 🎉</button>
+      </div>
+    </div>
+
+    <div class="group">
+      <h2>😅 THUA (nhẹ nhàng, hài hước)</h2>
+      <div class="grid">
+        <button class="lose" onclick="loseTrombone()"><b>S1</b>Kèn buồn hài "womp" 🎺</button>
+        <button class="lose" onclick="loseBoing()"><b>S2</b>Boing nảy tưng 🤸</button>
+        <button class="lose" onclick="loseWhistle()"><b>S3</b>Còi trượt xuống 📉</button>
+        <button class="lose" onclick="loseAww()"><b>S4</b>"Aww" tiếc nuối 🥺</button>
+        <button class="lose" onclick="loseBonk()"><b>S5</b>Bonk nhẹ vui 🪀</button>
+        <button class="lose" onclick="loseOop()"><b>S6</b>Oop tụt dễ thương 🫧</button>
+        <button class="lose" onclick="loseWobble()"><b>S7</b>Rung run ngộ nghĩnh 〰️</button>
+        <button class="lose" onclick="loseRetro()"><b>S8</b>Buzz 8-bit 🎮</button>
+      </div>
+    </div>
+
+    <div class="group">
+      <h2>🔈 Đang dùng trong game</h2>
+      <div class="grid">
+        <button class="cur" onclick="curWin()"><b>Đ</b>ting ting (đúng)</button>
+        <button class="cur" onclick="curLose()"><b>S</b>tè tè (sai)</button>
+        <button class="cur" onclick="speak('Đúng rồi!')"><b>+</b>Giọng "Đúng rồi!"</button>
+        <button class="cur" onclick="speak('Sai rồi, thử lại nhé')"><b>+</b>Giọng "Sai rồi..."</button>
+      </div>
+    </div>
+
+    <script>
+      let ctx
+      function ac() {
+        if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)()
+        if (ctx.state === 'suspended') ctx.resume()
+        return ctx
+      }
+      function beep(freq, t, dur, type = 'sine', peak = 0.25) {
+        const c = ac()
+        const t0 = c.currentTime + t
+        const o = c.createOscillator()
+        const g = c.createGain()
+        o.type = type
+        o.frequency.setValueAtTime(freq, t0)
+        g.gain.setValueAtTime(0.0001, t0)
+        g.gain.exponentialRampToValueAtTime(peak, t0 + 0.015)
+        g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur)
+        o.connect(g)
+        g.connect(c.destination)
+        o.start(t0)
+        o.stop(t0 + dur + 0.03)
+      }
+      function slide(f1, f2, t, dur, type = 'sine', peak = 0.25) {
+        const c = ac()
+        const t0 = c.currentTime + t
+        const o = c.createOscillator()
+        const g = c.createGain()
+        o.type = type
+        o.frequency.setValueAtTime(f1, t0)
+        o.frequency.exponentialRampToValueAtTime(Math.max(20, f2), t0 + dur)
+        g.gain.setValueAtTime(0.0001, t0)
+        g.gain.exponentialRampToValueAtTime(peak, t0 + 0.02)
+        g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur)
+        o.connect(g)
+        g.connect(c.destination)
+        o.start(t0)
+        o.stop(t0 + dur + 0.03)
+      }
+      function chord(freqs, t, dur, type = 'triangle', peak = 0.16) {
+        freqs.forEach((f) => beep(f, t, dur, type, peak))
+      }
+      function noise(t, dur, peak = 0.15, freq = 5000, q = 0.8) {
+        const c = ac()
+        const t0 = c.currentTime + t
+        const len = Math.max(1, Math.floor(c.sampleRate * dur))
+        const buf = c.createBuffer(1, len, c.sampleRate)
+        const d = buf.getChannelData(0)
+        for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1
+        const src = c.createBufferSource()
+        src.buffer = buf
+        const bp = c.createBiquadFilter()
+        bp.type = 'bandpass'
+        bp.frequency.value = freq
+        bp.Q.value = q
+        const g = c.createGain()
+        g.gain.setValueAtTime(0.0001, t0)
+        g.gain.exponentialRampToValueAtTime(peak, t0 + 0.01)
+        g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur)
+        src.connect(bp)
+        bp.connect(g)
+        g.connect(c.destination)
+        src.start(t0)
+        src.stop(t0 + dur + 0.02)
+      }
+
+      // ───────── THẮNG ─────────
+      function winFanfare() {
+        ;[392, 523, 659].forEach((f, i) => beep(f, i * 0.1, 0.13, 'sawtooth', 0.16))
+        chord([784, 988, 1175, 1568], 0.32, 0.5, 'sawtooth', 0.12)
+      }
+      function winSparkle() {
+        ;[1047, 1319, 1568, 2093, 2637].forEach((f, i) => beep(f, i * 0.07, 0.3, 'triangle', 0.2))
+        noise(0.0, 0.5, 0.06, 9000, 0.5)
+      }
+      function winTada() {
+        beep(587, 0, 0.08, 'square', 0.16)
+        beep(740, 0.08, 0.08, 'square', 0.16)
+        chord([523, 659, 784, 1046], 0.18, 0.6, 'triangle', 0.16)
+        noise(0.18, 0.4, 0.05, 8000, 0.5)
+      }
+      function winRainbow() {
+        slide(440, 1320, 0, 0.35, 'triangle', 0.22)
+        chord([1046, 1319, 1568], 0.34, 0.45, 'triangle', 0.16)
+      }
+      function winCoins() {
+        const notes = [1319, 1568, 1760, 2093, 1760, 2093, 2637]
+        notes.forEach((f, i) => beep(f, i * 0.06, 0.18, 'square', 0.12))
+      }
+      function winChimes() {
+        ;[784, 880, 1047, 1319, 1568, 1760].forEach((f, i) => beep(f, i * 0.08, 0.7, 'sine', 0.22))
+      }
+      function winCheer() {
+        chord([523, 659, 784], 0, 0.18, 'triangle', 0.16)
+        chord([587, 740, 880], 0.16, 0.18, 'triangle', 0.16)
+        chord([659, 831, 988], 0.32, 0.45, 'triangle', 0.16)
+        noise(0.32, 0.45, 0.05, 7000, 0.5)
+      }
+      function winTune() {
+        const mel = [523, 659, 784, 1046, 784, 1046]
+        mel.forEach((f, i) => beep(f, i * 0.12, 0.16, 'triangle', 0.22))
+      }
+      function winLevelup() {
+        ;[523, 659, 784, 1046, 1319].forEach((f, i) => beep(f, i * 0.08, 0.14, 'square', 0.14))
+        beep(1568, 0.42, 0.3, 'square', 0.14)
+      }
+      function winMagic() {
+        slide(880, 2200, 0, 0.3, 'sine', 0.18)
+        ;[2093, 2637, 3136].forEach((f, i) => beep(f, 0.22 + i * 0.05, 0.25, 'triangle', 0.14))
+        noise(0.0, 0.55, 0.05, 10000, 0.4)
+      }
+
+      // Tiếng vỗ tay: nhiều "tách" noise ngắn ngẫu nhiên
+      function applause(t, dur, peak = 0.12) {
+        const n = Math.floor(dur * 60)
+        for (let i = 0; i < n; i++) {
+          const at = t + Math.random() * dur
+          noise(at, 0.04, peak * (0.4 + Math.random() * 0.6), 2500 + Math.random() * 3000, 1.2)
+        }
+      }
+      // Tiếng đám đông "wahhh" reo lên: noise quét tần số + phồng âm lượng
+      function crowdSwell(t, dur, peak = 0.14) {
+        const c = ac()
+        const t0 = c.currentTime + t
+        const len = Math.max(1, Math.floor(c.sampleRate * dur))
+        const buf = c.createBuffer(1, len, c.sampleRate)
+        const d = buf.getChannelData(0)
+        for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1
+        const src = c.createBufferSource()
+        src.buffer = buf
+        const bp = c.createBiquadFilter()
+        bp.type = 'bandpass'
+        bp.Q.value = 0.9
+        bp.frequency.setValueAtTime(700, t0)
+        bp.frequency.linearRampToValueAtTime(1600, t0 + dur * 0.6)
+        bp.frequency.linearRampToValueAtTime(1100, t0 + dur)
+        const g = c.createGain()
+        g.gain.setValueAtTime(0.0001, t0)
+        g.gain.exponentialRampToValueAtTime(peak, t0 + dur * 0.4)
+        g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur)
+        src.connect(bp)
+        bp.connect(g)
+        g.connect(c.destination)
+        src.start(t0)
+        src.stop(t0 + dur + 0.05)
+      }
+      function winCrowd() {
+        crowdSwell(0, 1.1, 0.14)
+        applause(0.25, 1.0, 0.1)
+      }
+      function winYeahCombo() {
+        ;[392, 523, 659].forEach((f, i) => beep(f, i * 0.09, 0.12, 'sawtooth', 0.14))
+        chord([784, 988, 1175, 1568], 0.28, 0.5, 'sawtooth', 0.1)
+        crowdSwell(0.2, 1.0, 0.12)
+        applause(0.4, 0.9, 0.09)
+        speak('Yeah!')
+      }
+
+      // Một "giọng" trẻ con hô "yeah" — sóng giàu hài âm + formant nguyên âm + rung
+      function kidVoice(start, base, dur, peak = 0.1) {
+        const c = ac()
+        const t0 = c.currentTime + start
+        const o = c.createOscillator()
+        o.type = 'sawtooth'
+        o.frequency.setValueAtTime(base * 0.9, t0)
+        o.frequency.linearRampToValueAtTime(base * 1.25, t0 + dur * 0.35)
+        o.frequency.linearRampToValueAtTime(base * 1.05, t0 + dur)
+        const lfo = c.createOscillator()
+        lfo.frequency.value = 5 + Math.random() * 2
+        const lg = c.createGain()
+        lg.gain.value = base * 0.03
+        lfo.connect(lg)
+        lg.connect(o.frequency)
+        const f1 = c.createBiquadFilter()
+        f1.type = 'bandpass'
+        f1.frequency.value = 900
+        f1.Q.value = 6
+        const f2 = c.createBiquadFilter()
+        f2.type = 'bandpass'
+        f2.frequency.value = 1900
+        f2.Q.value = 8
+        const g = c.createGain()
+        g.gain.setValueAtTime(0.0001, t0)
+        g.gain.exponentialRampToValueAtTime(peak, t0 + dur * 0.25)
+        g.gain.setValueAtTime(peak, t0 + dur * 0.6)
+        g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur)
+        o.connect(f1)
+        o.connect(f2)
+        f1.connect(g)
+        f2.connect(g)
+        g.connect(c.destination)
+        o.start(t0)
+        lfo.start(t0)
+        o.stop(t0 + dur + 0.05)
+        lfo.stop(t0 + dur + 0.05)
+      }
+      function winKidsCheer() {
+        ;[262, 294, 330, 392, 440].forEach((b, i) => kidVoice(i * 0.04, b, 0.85 - i * 0.04, 0.1))
+        crowdSwell(0.05, 1.0, 0.08)
+        applause(0.3, 0.95, 0.09)
+      }
+      function winKidsParty() {
+        winKidsCheer()
+        chord([784, 988, 1175, 1568], 0.0, 0.4, 'triangle', 0.08)
+        speakPitch('Yay!', 1.9)
+      }
+
+      // ───────── THUA (hài/nhẹ) ─────────
+      function loseTrombone() {
+        slide(311, 294, 0, 0.22, 'sawtooth', 0.18)
+        slide(277, 262, 0.22, 0.24, 'sawtooth', 0.18)
+        slide(247, 196, 0.46, 0.5, 'sawtooth', 0.18)
+      }
+      function loseBoing() {
+        slide(600, 180, 0, 0.35, 'triangle', 0.25)
+        beep(180, 0.3, 0.12, 'triangle', 0.18)
+      }
+      function loseWhistle() {
+        slide(900, 250, 0, 0.45, 'sine', 0.25)
+      }
+      function loseAww() {
+        beep(392, 0, 0.22, 'sine', 0.26)
+        slide(349, 262, 0.18, 0.4, 'sine', 0.26)
+      }
+      function loseBonk() {
+        beep(160, 0, 0.18, 'triangle', 0.3)
+        beep(120, 0.12, 0.18, 'sine', 0.22)
+      }
+      function loseOop() {
+        slide(520, 300, 0, 0.26, 'sine', 0.3)
+        slide(400, 230, 0.16, 0.32, 'sine', 0.26)
+      }
+      function loseWobble() {
+        const c = ac()
+        const t0 = c.currentTime
+        const o = c.createOscillator()
+        const g = c.createGain()
+        const lfo = c.createOscillator()
+        const lg = c.createGain()
+        o.type = 'triangle'
+        o.frequency.setValueAtTime(330, t0)
+        o.frequency.exponentialRampToValueAtTime(200, t0 + 0.5)
+        lfo.frequency.value = 14
+        lg.gain.value = 30
+        lfo.connect(lg)
+        lg.connect(o.frequency)
+        g.gain.setValueAtTime(0.0001, t0)
+        g.gain.exponentialRampToValueAtTime(0.22, t0 + 0.03)
+        g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.55)
+        o.connect(g)
+        g.connect(c.destination)
+        o.start(t0)
+        lfo.start(t0)
+        o.stop(t0 + 0.6)
+        lfo.stop(t0 + 0.6)
+      }
+      function loseRetro() {
+        beep(330, 0, 0.12, 'square', 0.16)
+        beep(247, 0.12, 0.14, 'square', 0.16)
+        beep(165, 0.26, 0.22, 'square', 0.16)
+      }
+
+      // ───────── Hiện tại / giọng nói ─────────
+      function curWin() {
+        beep(1318.5, 0, 0.12, 'triangle', 0.25)
+        beep(1760, 0.11, 0.2, 'triangle', 0.25)
+      }
+      function curLose() {
+        beep(196, 0, 0.18, 'sawtooth', 0.18)
+        beep(146.8, 0.16, 0.28, 'sawtooth', 0.18)
+      }
+      function speak(text) {
+        if (!window.speechSynthesis) return alert('Trình duyệt không hỗ trợ đọc giọng nói.')
+        const u = new SpeechSynthesisUtterance(text)
+        u.lang = 'vi-VN'
+        const vi = speechSynthesis.getVoices().find((v) => v.lang && v.lang.startsWith('vi'))
+        if (vi) u.voice = vi
+        u.pitch = 1.1
+        speechSynthesis.cancel()
+        speechSynthesis.speak(u)
+      }
+      // Đọc với cao độ cao hơn để giả giọng trẻ con
+      function speakPitch(text, pitch) {
+        if (!window.speechSynthesis) return
+        const u = new SpeechSynthesisUtterance(text)
+        u.pitch = pitch
+        u.rate = 1.15
+        speechSynthesis.cancel()
+        speechSynthesis.speak(u)
+      }
+      if (window.speechSynthesis) speechSynthesis.onvoiceschanged = () => {}
+    </script>
+  </body>
+</html>
