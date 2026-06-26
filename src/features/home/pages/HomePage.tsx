@@ -86,13 +86,13 @@ export default function HomePage() {
                   </p>
                   <p className="text-5xl font-black leading-none">{grade}</p>
                 </div>
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/25 backdrop-blur-sm ring-1 ring-white/40">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/25 ring-1 ring-white/40">
                   <Icon size={22} strokeWidth={2.2} />
                 </span>
               </div>
 
               {/* Nút Vào học dạng pill */}
-              <span className="relative inline-flex items-center justify-center gap-1 self-start rounded-full bg-white/20 px-3.5 py-1.5 text-sm font-bold backdrop-blur-sm transition-colors duration-300 group-hover:bg-white/30">
+              <span className="relative inline-flex items-center justify-center gap-1 self-start rounded-full bg-white/25 px-3.5 py-1.5 text-sm font-bold transition-colors duration-300 group-hover:bg-white/30">
                 {t('home.play')}
                 <ChevronRight
                   size={15}

@@ -2,6 +2,11 @@
 // - Đúng (thắng): phát file yeah.mp3 (tiếng reo hò).
 // - Sai (thua): hiệu ứng "rung run" tổng hợp bằng Web Audio.
 // - Vào game: tiếng chuông gió long lanh tổng hợp bằng Web Audio.
+//
+// Tất cả âm thanh đi qua MỘT AudioContext duy nhất (kể cả yeah.mp3 được giải mã
+// thành AudioBuffer) để chỉ có một đường "mở khóa" autoplay → tránh tình trạng
+// lúc có lúc không. Context được resume ở MỌI thao tác chạm/bấm (không chỉ lần
+// đầu), nên khi vào game nó đã chạy sẵn và không phải hoãn tiếng "vào game".
 
 import yeahUrl from '@/assets/sound/yeah.mp3'
 
@@ -16,6 +21,7 @@ function getCtx(): AudioContext | null {
     const Ctor = w.AudioContext ?? w.webkitAudioContext
     if (!Ctor) return null
     ctx = new Ctor()
+    void loadYeahBuffer(ctx)
   }
   return ctx
 }
@@ -67,99 +73,143 @@ export function setMuted(value: boolean) {
   }
 }
 
+/** Lấy context và đảm bảo nó đang chạy (resume nếu bị treo). */
 function prepare(): AudioContext | null {
   if (muted) return null
   const c = getCtx()
   if (!c) return null
-  // Trình duyệt khóa audio cho tới khi có thao tác người dùng — chơi sau khi
-  // kéo thả nên ngữ cảnh sẽ được mở khóa ở đây.
   if (c.state === 'suspended') void c.resume()
   return c
 }
 
-// ─── Tiếng "thắng": phát file yeah.mp3 ──────────────────────────────────────
-let yeahAudio: HTMLAudioElement | null = null
-let yeahFadeTimer: number | null = null
+// ─── Tiếng "thắng": yeah.mp3 giải mã thành AudioBuffer ──────────────────────
+// Dùng Web Audio (không dùng thẻ <audio>) để: (1) chung một đường mở khóa với
+// các tiếng khác, (2) fade/stop được trên iOS (vốn khóa <audio>.volume).
+let yeahBuffer: AudioBuffer | null = null
+let yeahLoading: Promise<void> | null = null
+let yeahSource: AudioBufferSourceNode | null = null
+let yeahGain: GainNode | null = null
 
-function getYeah(): HTMLAudioElement | null {
+function loadYeahBuffer(c: AudioContext): Promise<void> {
+  if (yeahBuffer) return Promise.resolve()
+  if (!yeahLoading) {
+    yeahLoading = fetch(yeahUrl)
+      .then((r) => r.arrayBuffer())
+      .then((buf) => c.decodeAudioData(buf))
+      .then((decoded) => {
+        yeahBuffer = decoded
+      })
+      .catch(() => {
+        // Giải mã thất bại → để playCorrect dùng phương án dự phòng <audio>.
+        yeahLoading = null
+      })
+  }
+  return yeahLoading
+}
+
+function stopYeahSource() {
+  if (yeahSource) {
+    try {
+      yeahSource.stop()
+    } catch {
+      // Đã dừng rồi thì bỏ qua.
+    }
+    yeahSource.disconnect()
+    yeahSource = null
+  }
+  if (yeahGain) {
+    yeahGain.disconnect()
+    yeahGain = null
+  }
+}
+
+// ─── Phương án dự phòng bằng thẻ <audio> nếu Web Audio không khả dụng ────────
+let fallbackAudio: HTMLAudioElement | null = null
+
+function getFallbackAudio(): HTMLAudioElement | null {
   if (typeof Audio === 'undefined') return null
-  if (!yeahAudio) {
-    yeahAudio = new Audio(yeahUrl)
-    yeahAudio.preload = 'auto'
+  if (!fallbackAudio) {
+    fallbackAudio = new Audio(yeahUrl)
+    fallbackAudio.preload = 'auto'
   }
-  return yeahAudio
+  return fallbackAudio
 }
 
-function clearYeahFade() {
-  if (yeahFadeTimer !== null) {
-    window.clearInterval(yeahFadeTimer)
-    yeahFadeTimer = null
-  }
-}
-
-// ─── Mở khóa audio ở lần tương tác đầu tiên ─────────────────────────────────
-// Trình duyệt chặn âm thanh tới khi người dùng chạm/bấm. Ta nghe sự kiện đầu
-// tiên (một lần) để resume AudioContext và "mồi" thẻ <audio>.
+// ─── Mở khóa audio & giữ context luôn chạy ──────────────────────────────────
+// Trình duyệt chặn âm thanh tới khi người dùng chạm/bấm, và có thể tự "suspend"
+// lại sau một lúc. Vì vậy ta resume context ở MỌI thao tác (không gỡ listener),
+// để khi vào game / trả lời đúng, context chắc chắn đang chạy.
 let audioInitialized = false
 
 function unlockAudio() {
   const c = getCtx()
-  if (c && c.state === 'suspended') void c.resume()
-  // Mồi thẻ audio trong phạm vi cử chỉ người dùng (cần cho iOS/Safari).
-  const a = getYeah()
-  if (a) {
-    a.muted = true
-    a.play()
-      .then(() => {
-        a.pause()
-        a.currentTime = 0
-        a.muted = false
-      })
-      .catch(() => {
-        a.muted = false
-      })
-  }
+  if (!c) return
+  if (c.state === 'suspended') void c.resume()
+  void loadYeahBuffer(c)
 }
 
 export function initAudio() {
   if (audioInitialized || typeof window === 'undefined') return
   audioInitialized = true
-  const handler = () => {
-    unlockAudio()
-    window.removeEventListener('pointerdown', handler)
-    window.removeEventListener('touchstart', handler)
-    window.removeEventListener('keydown', handler)
-  }
-  window.addEventListener('pointerdown', handler)
-  window.addEventListener('touchstart', handler)
+  const handler = () => unlockAudio()
+  // Không gỡ listener: cần resume lại mỗi khi context bị trình duyệt treo.
+  window.addEventListener('pointerdown', handler, { passive: true })
+  window.addEventListener('touchstart', handler, { passive: true })
   window.addEventListener('keydown', handler)
 }
 
 /** Khen khi trả lời đúng — phát tiếng reo "yeah". */
 export function playCorrect() {
-  if (muted) return
-  const a = getYeah()
+  const c = prepare()
+  if (!c) return
+  if (yeahBuffer) {
+    stopYeahSource()
+    const src = c.createBufferSource()
+    const gain = c.createGain()
+    src.buffer = yeahBuffer
+    gain.gain.setValueAtTime(1, c.currentTime)
+    src.connect(gain)
+    gain.connect(c.destination)
+    src.onended = () => {
+      // Chỉ dọn nếu vẫn là source hiện tại (tránh dọn nhầm lần phát mới).
+      if (yeahSource === src) stopYeahSource()
+    }
+    src.start()
+    yeahSource = src
+    yeahGain = gain
+    return
+  }
+  // Dự phòng: thẻ <audio> (khi chưa giải mã xong hoặc Web Audio không có).
+  const a = getFallbackAudio()
   if (!a) return
-  clearYeahFade()
   a.volume = 1
   a.currentTime = 0
   void a.play().catch(() => {})
+  void loadYeahBuffer(c) // thử nạp buffer cho lần sau
 }
 
 /** Dừng tiếng "yeah" (fade nhẹ) — gọi khi chuyển sang câu tiếp theo. */
 export function stopCorrect() {
-  const a = yeahAudio
-  if (!a || a.paused) return
-  clearYeahFade()
-  yeahFadeTimer = window.setInterval(() => {
-    a.volume = Math.max(0, a.volume - 0.15)
-    if (a.volume <= 0.001) {
-      a.pause()
-      a.currentTime = 0
-      a.volume = 1
-      clearYeahFade()
+  const c = ctx
+  if (c && yeahSource && yeahGain) {
+    const t0 = c.currentTime
+    yeahGain.gain.cancelScheduledValues(t0)
+    yeahGain.gain.setValueAtTime(yeahGain.gain.value, t0)
+    yeahGain.gain.linearRampToValueAtTime(0.0001, t0 + 0.15)
+    const src = yeahSource
+    try {
+      src.stop(t0 + 0.16)
+    } catch {
+      // Bỏ qua nếu đã dừng.
     }
-  }, 20)
+    return
+  }
+  // Dự phòng <audio>: dừng thẳng (iOS không cho chỉnh volume nên không fade).
+  const a = fallbackAudio
+  if (a && !a.paused) {
+    a.pause()
+    a.currentTime = 0
+  }
 }
 
 /** Báo khi trả lời sai — hiệu ứng "rung run ngộ nghĩnh" (S7). */
@@ -195,15 +245,19 @@ function chime(c: AudioContext) {
 
 /** Tiếng khi vào game — "chuông gió long lanh" (T6). */
 export function playEnter() {
-  if (muted) return
-  const c = getCtx()
+  const c = prepare()
   if (!c) return
-  if (c.state === 'suspended') {
-    // Chưa có tương tác: phát ngay khi audio được mở khóa (resume xong).
-    c.resume()
-      .then(() => chime(c))
-      .catch(() => {})
+  if (c.state === 'running') {
+    chime(c)
     return
   }
-  chime(c)
+  // Context đang treo: thử resume rồi chime, NHƯNG chỉ kêu nếu resume hoàn tất
+  // nhanh (trong cửa sổ ngắn). Tránh lỗi cũ: lời hứa resume chỉ xong ở lần chạm
+  // kế tiếp — có thể đã rời game → tiếng "vào game" kêu sai chỗ.
+  const deadline = performance.now() + 400
+  c.resume()
+    .then(() => {
+      if (performance.now() <= deadline && c.state === 'running') chime(c)
+    })
+    .catch(() => {})
 }

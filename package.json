@@ -15,6 +15,7 @@
     "test:watch": "vitest",
     "e2e": "playwright test",
     "preview": "vite preview",
+    "deploy": "npm run build:prod && firebase deploy --only hosting",
     "prepare": "husky"
   },
   "lint-staged": {
