@@ -18,5 +18,8 @@ export type GameRound = {
   renderPrompt: (slot: ReactNode) => ReactNode
 }
 
-/** Hàm sinh câu hỏi cho một game. */
-export type RoundGenerator = () => GameRound
+/**
+ * Hàm sinh câu hỏi cho một game. `level` là số câu đã trả lời đúng — dùng cho
+ * game tăng dần độ khó; các game theo chủ đề cố định có thể bỏ qua tham số này.
+ */
+export type RoundGenerator = (level?: number) => GameRound

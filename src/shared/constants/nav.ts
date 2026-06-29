@@ -24,10 +24,10 @@ export const NAV_ITEMS: NavItem[] = [
     right: ['ALL'],
   },
   {
-    key: 'homework',
-    labelKey: 'nav.homework',
-    icon: 'homework',
-    path: '/homework',
+    key: 'exchange',
+    labelKey: 'nav.exchange',
+    icon: 'exchange',
+    path: '/exchange',
     right: ['ALL'],
   },
   {

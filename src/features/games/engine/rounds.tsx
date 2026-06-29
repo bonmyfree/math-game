@@ -17,7 +17,7 @@ import {
 
 import { ObjectGrid, ObjectRow, Op } from './visuals'
 
-import type { GameOption, GameRound } from './types'
+import type { GameOption, GameRound, RoundGenerator } from './types'
 import type { CountObject } from './visuals'
 import type { LucideIcon } from 'lucide-react'
 
@@ -69,9 +69,9 @@ const pickObject = () => OBJECTS[randInt(0, OBJECTS.length - 1)]
 
 // ─── Các hàm sinh câu hỏi ────────────────────────────────────────────────────
 
-/** Đếm số: đếm số đồ vật rồi kéo số đúng vào ô. */
-export function generateCounting(): GameRound {
-  const count = randInt(1, 10)
+/** Đếm số: đếm số đồ vật rồi kéo số đúng vào ô. `max` = số lớn nhất có thể xuất hiện. */
+export function generateCounting(max = 10): GameRound {
+  const count = randInt(1, max)
   const obj = pickObject()
   return {
     question: (
@@ -79,7 +79,7 @@ export function generateCounting(): GameRound {
         Có bao nhiêu <span className="text-indigo-600">{obj.label}</span>?
       </>
     ),
-    options: numberOptionList(count, 1, 10),
+    options: numberOptionList(count, 1, max),
     answerId: String(count),
     renderPrompt: (slot) => (
       <div className="flex flex-col items-center gap-4">
@@ -90,15 +90,15 @@ export function generateCounting(): GameRound {
   }
 }
 
-/** Phép cộng: gộp hai nhóm đồ vật, kéo tổng vào ô. */
-export function generateAddition(): GameRound {
-  const a = randInt(1, 5)
-  const b = randInt(1, Math.min(5, 10 - a))
+/** Phép cộng: gộp hai nhóm đồ vật, kéo tổng vào ô. `max` = tổng lớn nhất. */
+export function generateAddition(max = 10): GameRound {
+  const a = randInt(1, Math.max(1, max - 1))
+  const b = randInt(1, Math.max(1, max - a))
   const sum = a + b
   const obj = pickObject()
   return {
     question: <>Có tất cả bao nhiêu?</>,
-    options: numberOptionList(sum, 0, 10),
+    options: numberOptionList(sum, 0, max),
     answerId: String(sum),
     renderPrompt: (slot) => (
       <div className="flex flex-col items-center gap-5">
@@ -117,15 +117,15 @@ export function generateAddition(): GameRound {
   }
 }
 
-/** Phép trừ: bớt đi một số đồ vật (gạch bỏ), kéo số còn lại vào ô. */
-export function generateSubtraction(): GameRound {
-  const a = randInt(2, 10)
+/** Phép trừ: bớt đi một số đồ vật (gạch bỏ), kéo số còn lại vào ô. `max` = số bị trừ lớn nhất. */
+export function generateSubtraction(max = 10): GameRound {
+  const a = randInt(2, max)
   const b = randInt(1, a - 1)
   const diff = a - b
   const obj = pickObject()
   return {
     question: <>Còn lại bao nhiêu?</>,
-    options: numberOptionList(diff, 0, 10),
+    options: numberOptionList(diff, 0, max),
     answerId: String(diff),
     renderPrompt: (slot) => (
       <div className="flex flex-col items-center gap-5">
@@ -142,10 +142,10 @@ export function generateSubtraction(): GameRound {
   }
 }
 
-/** So sánh số: kéo dấu <, >, = vào giữa hai số. */
-export function generateCompare(): GameRound {
-  const x = randInt(1, 10)
-  const y = randInt(1, 10)
+/** So sánh số: kéo dấu <, >, = vào giữa hai số. `max` = số lớn nhất có thể xuất hiện. */
+export function generateCompare(max = 10): GameRound {
+  const x = randInt(1, max)
+  const y = randInt(1, max)
   const answerId = x < y ? 'lt' : x > y ? 'gt' : 'eq'
   const sym = (s: string) => <span className="text-5xl font-extrabold">{s}</span>
   return {
@@ -215,4 +215,43 @@ export function generateQuiz(): GameRound {
     generateShapes,
   ]
   return gens[randInt(0, gens.length - 1)]()
+}
+
+/** Số câu hỏi cho mỗi bậc độ khó. Qua mỗi 10 câu đúng sẽ lên bậc tiếp theo. */
+const QUESTIONS_PER_STAGE = 10
+
+/** Tổng số câu của game tổng hợp — trả lời đúng đủ số này là chiến thắng. */
+export const PROGRESSIVE_TOTAL = 40
+
+/** Chọn ngẫu nhiên một hàm sinh trong danh sách rồi gọi nó. */
+const oneOf = (gens: RoundGenerator[]): GameRound => gens[randInt(0, gens.length - 1)]()
+
+/**
+ * Các bậc độ khó của game tổng hợp (mỗi bậc 10 câu):
+ *   1. Câu 1–10  : Nhận biết số 1–10 và hình
+ *   2. Câu 11–20 : So sánh số
+ *   3. Câu 21–30 : Cộng / trừ trong phạm vi 10
+ *   4. Câu 31–40 : Trộn nâng cao (tất cả chủ đề)
+ */
+const PROGRESSIVE_STAGES: RoundGenerator[] = [
+  () => oneOf([() => generateCounting(10), () => generateShapes()]),
+  () => generateCompare(10),
+  () => oneOf([() => generateAddition(10), () => generateSubtraction(10)]),
+  () =>
+    oneOf([
+      () => generateCounting(10),
+      () => generateShapes(),
+      () => generateCompare(10),
+      () => generateAddition(10),
+      () => generateSubtraction(10),
+    ]),
+]
+
+/**
+ * Game tổng hợp: gộp tất cả chủ đề vào một mạch chơi, độ khó tăng dần theo
+ * `level` (số câu bé đã trả lời đúng) — cứ mỗi 10 câu đúng lại lên một bậc.
+ */
+export function generateProgressive(level = 0): GameRound {
+  const stage = Math.min(Math.floor(level / QUESTIONS_PER_STAGE), PROGRESSIVE_STAGES.length - 1)
+  return PROGRESSIVE_STAGES[stage]()
 }

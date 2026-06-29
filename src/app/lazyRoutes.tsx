@@ -40,6 +40,7 @@ export const ShapesGamePage = withSuspense(
   lazy(() => import('@/features/games/pages/ShapesGamePage')),
 )
 export const QuizGamePage = withSuspense(lazy(() => import('@/features/games/pages/QuizGamePage')))
+export const PlayGamePage = withSuspense(lazy(() => import('@/features/games/pages/PlayGamePage')))
 
 // Feature menus (placeholder template pages)
 export const DocumentsPage = withSuspense(
@@ -48,6 +49,9 @@ export const DocumentsPage = withSuspense(
 export const RanksPage = withSuspense(lazy(() => import('@/features/ranks/pages/RanksPage')))
 export const HomeworkPage = withSuspense(
   lazy(() => import('@/features/homework/pages/HomeworkPage')),
+)
+export const ExchangeCoinsPage = withSuspense(
+  lazy(() => import('@/features/exchange/pages/ExchangeCoinsPage')),
 )
 export const SettingsPage = withSuspense(
   lazy(() => import('@/features/settings/pages/SettingsPage')),

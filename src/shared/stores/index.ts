@@ -3,3 +3,4 @@ export { useGlobalStore } from './global.store'
 
 // ─── Features ─────────────────────────────────────────────────────────────────
 export { useAuthStore } from './auth.store'
+export { useCoinsStore } from './coins.store'

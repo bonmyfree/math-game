@@ -1,7 +1,7 @@
 // ─── Common Types ─────────────────────────────────────────────────────────────
 export type Language = 'en' | 'vi'
 export type ConfirmActionType = 'delete' | 'update' | 'restore'
-export type NavIconKey = 'home' | 'documents' | 'ranks' | 'homework' | 'settings'
+export type NavIconKey = 'home' | 'documents' | 'ranks' | 'homework' | 'exchange' | 'settings'
 
 //─── Nav bar and tabar ─────────────────────────────────────────────────────────────
 export interface NavItem {

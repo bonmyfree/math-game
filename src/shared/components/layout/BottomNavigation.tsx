@@ -4,6 +4,7 @@ import {
   FileText,
   Trophy,
   BookOpen,
+  Coins,
   Settings,
   ChevronDown,
   ChevronRight,
@@ -27,6 +28,8 @@ function getImageByKey(key: NavIconKey | undefined, size = 18) {
       return <Trophy size={size} />
     case 'homework':
       return <BookOpen size={size} />
+    case 'exchange':
+      return <Coins size={size} />
     case 'settings':
       return <Settings size={size} />
     case 'home':

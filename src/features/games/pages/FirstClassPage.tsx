@@ -1,15 +1,17 @@
 import { useNavigate } from '@tanstack/react-router'
-import { ChevronLeft, Hash, Plus, Minus, Scale, Shapes, Brain } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Hand } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import type { LucideIcon } from 'lucide-react'
 
-type Game = {
+type GameType = {
   id: string
-  /** Tên trò chơi */
+  /** Tên thể loại game */
   name: string
+  /** Mô tả ngắn về cách chơi */
+  desc: string
   icon: LucideIcon
-  /** Gradient nền của ô game */
+  /** Gradient nền của thẻ */
   gradient: string
   /** Màu chấm sáng trang trí (mờ) phía sau */
   glow: string
@@ -17,54 +19,17 @@ type Game = {
   to?: string
 }
 
-const GAMES: Game[] = [
+// Danh sách các *thể loại* game (cách chơi), không chia theo chủ đề toán.
+// Mỗi thể loại gộp tất cả chủ đề và tăng dần độ khó.
+const GAME_TYPES: GameType[] = [
   {
-    id: 'counting',
-    name: 'Đếm số',
-    icon: Hash,
-    gradient: 'from-rose-400 to-pink-500',
-    glow: 'bg-rose-300',
-    to: '/games/1/counting',
-  },
-  {
-    id: 'addition',
-    name: 'Phép cộng',
-    icon: Plus,
-    gradient: 'from-amber-400 to-orange-500',
-    glow: 'bg-amber-300',
-    to: '/games/1/addition',
-  },
-  {
-    id: 'subtraction',
-    name: 'Phép trừ',
-    icon: Minus,
-    gradient: 'from-emerald-400 to-teal-500',
-    glow: 'bg-emerald-300',
-    to: '/games/1/subtraction',
-  },
-  {
-    id: 'compare',
-    name: 'So sánh số',
-    icon: Scale,
-    gradient: 'from-sky-400 to-blue-500',
-    glow: 'bg-sky-300',
-    to: '/games/1/compare',
-  },
-  {
-    id: 'shapes',
-    name: 'Hình khối',
-    icon: Shapes,
-    gradient: 'from-violet-400 to-purple-500',
-    glow: 'bg-violet-300',
-    to: '/games/1/shapes',
-  },
-  {
-    id: 'quiz',
-    name: 'Đố vui toán',
-    icon: Brain,
-    gradient: 'from-fuchsia-400 to-pink-500',
-    glow: 'bg-fuchsia-300',
-    to: '/games/1/quiz',
+    id: 'dragdrop',
+    name: 'Kéo thả đáp án',
+    desc: 'Kéo đáp án đúng vào ô — độ khó tăng dần từ đếm số, hình dạng, so sánh đến phép tính',
+    icon: Hand,
+    gradient: 'from-indigo-400 to-violet-500',
+    glow: 'bg-indigo-300',
+    to: '/games/1/play',
   },
 ]
 
@@ -98,40 +63,43 @@ export default function FirstClassPage() {
           </button>
           <div>
             <h1 className="text-2xl font-bold text-slate-800">{t('home.gradeLabel')} 1</h1>
-            <p className="text-sm text-slate-500">{t('games.subtitle')}</p>
+            <p className="text-sm text-slate-500">Chọn một thể loại để bắt đầu</p>
           </div>
         </div>
 
-        {/* Lưới game 3 cột, ô vuông */}
-        <div className="grid grid-cols-3 gap-3">
-          {GAMES.map(({ id, name, icon: Icon, gradient, glow, to }, i) => (
+        {/* Danh sách thể loại game (list dọc) */}
+        <div className="flex flex-col gap-3">
+          {GAME_TYPES.map(({ id, name, desc, icon: Icon, gradient, glow, to }, i) => (
             <button
               key={id}
               type="button"
               onClick={() => to && navigate({ to })}
               style={{ animationDelay: `${i * 80}ms` }}
-              className={`group animate-game-pop-in relative flex aspect-square flex-col items-center justify-center gap-2.5 overflow-hidden rounded-3xl bg-gradient-to-br ${gradient} p-3 text-white shadow-lg shadow-slate-200/60 transition-all duration-300 active:scale-[0.96] hover:-translate-y-1 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-white/50`}
+              className={`group animate-game-pop-in relative flex items-center gap-4 overflow-hidden rounded-3xl bg-gradient-to-br ${gradient} p-4 text-left text-white shadow-lg shadow-slate-200/60 transition-all duration-300 active:scale-[0.98] hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-white/50`}
             >
               {/* Quầng sáng mờ */}
               <span
-                className={`pointer-events-none absolute -right-5 -top-6 h-20 w-20 rounded-full ${glow} opacity-40 blur-2xl`}
+                className={`pointer-events-none absolute -right-6 -top-8 h-24 w-24 rounded-full ${glow} opacity-40 blur-2xl`}
               />
               {/* Icon lớn mờ làm hình nền */}
               <Icon
-                className="pointer-events-none absolute -bottom-3 -right-2 text-white/15 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
-                size={72}
+                className="pointer-events-none absolute -bottom-4 right-2 text-white/15 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
+                size={96}
                 strokeWidth={1.5}
               />
 
               {/* Icon trong huy hiệu kính mờ */}
-              <span className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-white/25 backdrop-blur-sm ring-1 ring-white/40 transition-transform duration-300 group-hover:scale-110">
-                <Icon size={24} strokeWidth={2.2} />
+              <span className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/25 backdrop-blur-sm ring-1 ring-white/40 transition-transform duration-300 group-hover:scale-110">
+                <Icon size={28} strokeWidth={2.2} />
               </span>
 
-              {/* Tên game */}
-              <span className="relative text-center text-[13px] font-bold leading-tight">
-                {name}
+              {/* Tên + mô tả thể loại */}
+              <span className="relative min-w-0 flex-1">
+                <span className="block text-base font-bold leading-tight">{name}</span>
+                <span className="mt-1 block text-xs leading-snug text-white/80">{desc}</span>
               </span>
+
+              <ChevronRight className="relative shrink-0 text-white/70" size={22} />
             </button>
           ))}
         </div>

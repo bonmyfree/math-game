@@ -13,9 +13,11 @@ import {
   CompareGamePage,
   ShapesGamePage,
   QuizGamePage,
+  PlayGamePage,
   DocumentsPage,
   RanksPage,
   HomeworkPage,
+  ExchangeCoinsPage,
   SettingsPage,
   LoginPage,
   ChangePasswordPage,
@@ -102,6 +104,13 @@ const quizGameRoute = createRoute({
   component: QuizGamePage,
 })
 
+// Game tổng hợp tăng dần độ khó (thể loại "Kéo thả").
+const playGameRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: '/games/1/play',
+  component: PlayGamePage,
+})
+
 const documentsRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: '/documents',
@@ -118,6 +127,12 @@ const homeworkRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: '/homework',
   component: HomeworkPage,
+})
+
+const exchangeRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: '/exchange',
+  component: ExchangeCoinsPage,
 })
 
 const settingsRoute = createRoute({
@@ -164,9 +179,11 @@ const routeTree = rootRoute.addChildren([
     compareGameRoute,
     shapesGameRoute,
     quizGameRoute,
+    playGameRoute,
     documentsRoute,
     ranksRoute,
     homeworkRoute,
+    exchangeRoute,
     settingsRoute,
     profileRoute,
     changePasswordRoute,

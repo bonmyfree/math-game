@@ -19,6 +19,7 @@ const en: I18nKeys = {
   'nav.documents': 'Documents',
   'nav.ranks': 'Ranks',
   'nav.homework': 'Homework',
+  'nav.exchange': 'Exchange',
   'nav.settings': 'Settings',
   'nav.users': 'User Management',
 

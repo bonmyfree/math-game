@@ -1,11 +1,28 @@
 import { useNavigate } from '@tanstack/react-router'
-import { ChevronLeft, RotateCcw, Sparkles, Star, Volume2, VolumeX } from 'lucide-react'
+import {
+  ChevronLeft,
+  Coins,
+  Home,
+  RotateCcw,
+  Sparkles,
+  Star,
+  Trophy,
+  Volume2,
+  VolumeX,
+} from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
+
+import { useCoinsStore } from '@/shared/stores'
 
 import { isMuted, playCorrect, playEnter, playWrong, setMuted, stopCorrect } from './sounds'
 
 import type { GameOption, GameRound, RoundGenerator } from './types'
 import type { ReactNode } from 'react'
+
+/** Xu thưởng cho mỗi câu trả lời đúng. */
+const COINS_PER_CORRECT = 1
+/** Xu thưởng thêm khi hoàn thành toàn bộ game. */
+const COINS_WIN_BONUS = 10
 
 type Props = {
   /** Tên game hiển thị ở tiêu đề. */
@@ -14,19 +31,38 @@ type Props = {
   subtitle: string
   /** Hàm sinh câu hỏi. */
   generate: RoundGenerator
+  /**
+   * Số câu cần trả lời đúng để chiến thắng. Có giá trị → game hữu hạn, trả lời
+   * đủ sẽ hiện màn chúc mừng. Bỏ trống → game chơi không giới hạn (vô tận).
+   */
+  totalRounds?: number
 }
 
 type DragState = { id: string; label: ReactNode; x: number; y: number } | null
 type Status = 'idle' | 'correct' | 'wrong'
 
-export function DragDropGame({ title, subtitle, generate }: Props) {
-  const navigate = useNavigate()
+/** Dải pháo giấy cho màn chúc mừng (màu + lệch ngang + thời lượng khác nhau). */
+const CONFETTI = Array.from({ length: 24 }, (_, i) => ({
+  left: (i * 37) % 100,
+  color: ['bg-rose-400', 'bg-amber-400', 'bg-emerald-400', 'bg-sky-400', 'bg-violet-400'][i % 5],
+  delay: (i % 8) * 0.25,
+  duration: 2.2 + (i % 5) * 0.4,
+  size: 8 + (i % 3) * 4,
+}))
 
-  const [round, setRound] = useState<GameRound>(() => generate())
+export function DragDropGame({ title, subtitle, generate, totalRounds }: Props) {
+  const navigate = useNavigate()
+  const addCoins = useCoinsStore((s) => s.addCoins)
+
+  const [round, setRound] = useState<GameRound>(() => generate(0))
   const [roundId, setRoundId] = useState(0)
+  /** Bậc độ khó hiện tại = số câu đã trả lời đúng (dùng cho game tăng dần). */
+  const levelRef = useRef(0)
   const [status, setStatus] = useState<Status>('idle')
   const [score, setScore] = useState(0)
   const [streak, setStreak] = useState(0)
+  /** Đã hoàn thành đủ `totalRounds` câu → hiện màn chúc mừng. */
+  const [won, setWon] = useState(false)
   /** id của ô vừa bị kéo sai (để lắc + tô đỏ tạm thời). */
   const [wrongId, setWrongId] = useState<string | null>(null)
   /** Trạng thái kéo hiện tại (để vẽ "bóng ma" đi theo ngón tay). */
@@ -52,7 +88,7 @@ export function DragDropGame({ title, subtitle, generate }: Props) {
     stopCorrect() // tắt tiếng "yeah" khi sang câu mới
     setStatus('idle')
     setWrongId(null)
-    setRound(generate())
+    setRound(generate(levelRef.current))
     setRoundId((n) => n + 1)
   }, [generate])
 
@@ -61,9 +97,16 @@ export function DragDropGame({ title, subtitle, generate }: Props) {
       if (id === roundRef.current.answerId) {
         playCorrect()
         setStatus('correct')
+        levelRef.current += 1
+        addCoins(COINS_PER_CORRECT)
         setScore((s) => s + 1)
         setStreak((s) => s + 1)
-        window.setTimeout(nextRound, 1200)
+        if (totalRounds && levelRef.current >= totalRounds) {
+          addCoins(COINS_WIN_BONUS)
+          window.setTimeout(() => setWon(true), 1200)
+        } else {
+          window.setTimeout(nextRound, 1200)
+        }
       } else {
         playWrong()
         setStatus('wrong')
@@ -75,7 +118,7 @@ export function DragDropGame({ title, subtitle, generate }: Props) {
         }, 600)
       }
     },
-    [nextRound],
+    [nextRound, totalRounds, addCoins],
   )
   const handleDropRef = useRef(handleDrop)
   useEffect(() => {
@@ -129,8 +172,10 @@ export function DragDropGame({ title, subtitle, generate }: Props) {
   }
 
   const restart = () => {
+    levelRef.current = 0
     setScore(0)
     setStreak(0)
+    setWon(false)
     nextRound()
   }
 
@@ -185,7 +230,10 @@ export function DragDropGame({ title, subtitle, generate }: Props) {
         </div>
         <div className="flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 shadow-sm">
           <Star size={18} className="fill-amber-400 text-amber-400" />
-          <span className="text-sm font-bold text-slate-700">{score}</span>
+          <span className="text-sm font-bold text-slate-700">
+            {score}
+            {totalRounds ? `/${totalRounds}` : ''}
+          </span>
         </div>
         <button
           type="button"
@@ -267,6 +315,71 @@ export function DragDropGame({ title, subtitle, generate }: Props) {
           style={{ left: drag.x, top: drag.y, transform: 'translate(-50%, -50%) rotate(-6deg)' }}
         >
           {drag.label}
+        </div>
+      )}
+
+      {/* Màn chúc mừng chiến thắng */}
+      {won && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-6 backdrop-blur-sm">
+          {/* Pháo giấy rơi */}
+          <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+            {CONFETTI.map((c, i) => (
+              <span
+                key={i}
+                className={`animate-game-confetti absolute top-0 rounded-sm ${c.color}`}
+                style={{
+                  left: `${c.left}%`,
+                  width: c.size,
+                  height: c.size,
+                  animationDelay: `${c.delay}s`,
+                  animationDuration: `${c.duration}s`,
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Thẻ chúc mừng */}
+          <div className="animate-game-pop relative w-full max-w-xs rounded-[2rem] bg-white p-7 text-center shadow-2xl">
+            <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-orange-500 shadow-lg">
+              <Trophy size={40} className="text-white" strokeWidth={2.2} />
+            </div>
+            <h2 className="text-2xl font-extrabold text-slate-800">Chúc mừng! 🎉</h2>
+            <p className="mt-1 text-sm text-slate-500">
+              Bé đã hoàn thành tất cả {totalRounds} câu hỏi!
+            </p>
+
+            <div className="mt-4 flex items-center justify-center gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-2">
+                <Star size={18} className="fill-amber-400 text-amber-400" />
+                <span className="text-base font-bold text-amber-600">{score} điểm</span>
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-yellow-50 px-3 py-2">
+                <Coins size={18} className="text-yellow-500" />
+                <span className="text-base font-bold text-yellow-600">
+                  +{score * COINS_PER_CORRECT + COINS_WIN_BONUS} xu
+                </span>
+              </span>
+            </div>
+
+            <div className="mt-6 flex gap-3">
+              <button
+                type="button"
+                onClick={() => navigate({ to: '/games/$grade', params: { grade: '1' } })}
+                className="flex flex-1 items-center justify-center gap-1.5 rounded-2xl bg-slate-100 px-4 py-3 font-bold text-slate-600 transition-colors hover:bg-slate-200 active:scale-95"
+              >
+                <Home size={18} />
+                Trang chủ
+              </button>
+              <button
+                type="button"
+                onClick={restart}
+                className="flex flex-1 items-center justify-center gap-1.5 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 px-4 py-3 font-bold text-white shadow-lg transition-transform hover:-translate-y-0.5 active:scale-95"
+              >
+                <RotateCcw size={18} />
+                Chơi lại
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

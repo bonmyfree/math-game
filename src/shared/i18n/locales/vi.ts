@@ -17,6 +17,7 @@ const vi = {
   'nav.documents': 'Tài liệu',
   'nav.ranks': 'Bảng xếp hạng',
   'nav.homework': 'Bài tập',
+  'nav.exchange': 'Đổi xu',
   'nav.settings': 'Cài đặt',
   'nav.users': 'Quản lý người dùng',
 
