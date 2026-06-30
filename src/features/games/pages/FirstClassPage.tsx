@@ -1,5 +1,5 @@
 import { useNavigate } from '@tanstack/react-router'
-import { ChevronLeft, ChevronRight, Hand } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Hand, Zap } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import type { LucideIcon } from 'lucide-react'
@@ -30,6 +30,15 @@ const GAME_TYPES: GameType[] = [
     gradient: 'from-indigo-400 to-violet-500',
     glow: 'bg-indigo-300',
     to: '/games/1/play',
+  },
+  {
+    id: 'challenge',
+    name: 'Thử thách đếm ngược',
+    desc: '120 giây · 5 mạng · chọn đáp án A, B, C, D — độ khó tăng dần, mỗi câu đúng +1 xu',
+    icon: Zap,
+    gradient: 'from-amber-400 to-orange-500',
+    glow: 'bg-amber-300',
+    to: '/games/1/challenge',
   },
 ]
 

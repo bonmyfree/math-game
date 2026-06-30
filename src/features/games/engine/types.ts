@@ -23,3 +23,16 @@ export type GameRound = {
  * game tăng dần độ khó; các game theo chủ đề cố định có thể bỏ qua tham số này.
  */
 export type RoundGenerator = (level?: number) => GameRound
+
+/** Một câu hỏi trắc nghiệm (chạm chọn) — 4 đáp án A, B, C, D. */
+export type ChallengeRound = {
+  /** Đề bài hiển thị cỡ lớn ở giữa màn hình. */
+  question: ReactNode
+  /** Đúng 4 lựa chọn, sẽ được gắn nhãn A → D theo thứ tự. */
+  options: GameOption[]
+  /** id của đáp án đúng (khớp với `GameOption.id`). */
+  answerId: string
+}
+
+/** Hàm sinh câu hỏi trắc nghiệm theo bậc độ khó (`level` tăng theo số câu đã ra). */
+export type ChallengeGenerator = (level?: number) => ChallengeRound

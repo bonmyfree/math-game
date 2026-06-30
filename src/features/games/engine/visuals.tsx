@@ -20,7 +20,11 @@ export function ObjectGrid({
   return (
     <div className={`grid place-content-center gap-3 ${cols}`}>
       {Array.from({ length: count }).map((_, i) => (
-        <span key={i} className="animate-game-pop-in" style={{ animationDelay: `${i * 50}ms` }}>
+        <span
+          key={i}
+          className="animate-game-pop-in"
+          style={{ animationDelay: `${Math.min(i, 6) * 45}ms` }}
+        >
           <Icon className={obj.color} size={size} strokeWidth={2} aria-hidden />
         </span>
       ))}
@@ -33,10 +37,12 @@ export function ObjectRow({
   count,
   obj,
   crossed = 0,
+  size = 32,
 }: {
   count: number
   obj: CountObject
   crossed?: number
+  size?: number
 }) {
   const Icon = obj.icon
   return (
@@ -45,18 +51,18 @@ export function ObjectRow({
         <span
           key={i}
           className="relative animate-game-pop-in"
-          style={{ animationDelay: `${i * 50}ms` }}
+          style={{ animationDelay: `${Math.min(i, 6) * 45}ms` }}
         >
           <Icon
             className={i < crossed ? 'text-slate-300' : obj.color}
-            size={32}
+            size={size}
             strokeWidth={2}
             aria-hidden
           />
           {i < crossed && (
             <X
               className="absolute inset-0 m-auto text-rose-400"
-              size={32}
+              size={size}
               strokeWidth={3}
               aria-hidden
             />

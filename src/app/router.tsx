@@ -14,6 +14,8 @@ import {
   ShapesGamePage,
   QuizGamePage,
   PlayGamePage,
+  ChallengeGamePage,
+  FireworksShowcasePage,
   DocumentsPage,
   RanksPage,
   HomeworkPage,
@@ -111,6 +113,20 @@ const playGameRoute = createRoute({
   component: PlayGamePage,
 })
 
+// Game thử thách (trắc nghiệm A/B/C/D, đếm giờ + mạng).
+const challengeGameRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: '/games/1/challenge',
+  component: ChallengeGamePage,
+})
+
+// Trang xem & chọn hiệu ứng pháo hoa ăn mừng.
+const fireworksShowcaseRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: '/games/fireworks',
+  component: FireworksShowcasePage,
+})
+
 const documentsRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: '/documents',
@@ -180,6 +196,8 @@ const routeTree = rootRoute.addChildren([
     shapesGameRoute,
     quizGameRoute,
     playGameRoute,
+    challengeGameRoute,
+    fireworksShowcaseRoute,
     documentsRoute,
     ranksRoute,
     homeworkRoute,

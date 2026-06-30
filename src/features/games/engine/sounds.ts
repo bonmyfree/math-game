@@ -243,6 +243,19 @@ function chime(c: AudioContext) {
   ;[784, 880, 1047, 1319, 1568, 1760].forEach((f, i) => beep(c, f, i * 0.08, 0.7, 'sine', 0.22))
 }
 
+/**
+ * Nhạc chiến thắng khi kết thúc game: một đoạn kèn "fanfare" rải hợp âm đi lên
+ * kèm tiếng reo "yeah" để ăn mừng.
+ */
+export function playWin() {
+  const c = prepare()
+  if (!c) return // Fanfare: Đô–Mi–Sol–Đô–Mi (rải lên) rồi hợp âm Đô trưởng ngân dài.
+  ;[523, 659, 784, 1047, 1319].forEach((f, i) => beep(c, f, i * 0.13, 0.5, 'triangle', 0.2))
+  ;[1047, 1319, 1568].forEach((f) => beep(c, f, 0.65, 0.9, 'sine', 0.18))
+  // Tiếng reo hò chồng lên trên.
+  playCorrect()
+}
+
 /** Tiếng khi vào game — "chuông gió long lanh" (T6). */
 export function playEnter() {
   const c = prepare()

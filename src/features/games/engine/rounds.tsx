@@ -17,7 +17,13 @@ import {
 
 import { ObjectGrid, ObjectRow, Op } from './visuals'
 
-import type { GameOption, GameRound, RoundGenerator } from './types'
+import type {
+  ChallengeGenerator,
+  ChallengeRound,
+  GameOption,
+  GameRound,
+  RoundGenerator,
+} from './types'
 import type { CountObject } from './visuals'
 import type { LucideIcon } from 'lucide-react'
 
@@ -254,4 +260,145 @@ const PROGRESSIVE_STAGES: RoundGenerator[] = [
 export function generateProgressive(level = 0): GameRound {
   const stage = Math.min(Math.floor(level / QUESTIONS_PER_STAGE), PROGRESSIVE_STAGES.length - 1)
   return PROGRESSIVE_STAGES[stage]()
+}
+
+// ─── Game thử thách (trắc nghiệm A/B/C/D, đếm giờ + mạng) ────────────────────
+
+/** Ô số lớn dùng cho đáp án trắc nghiệm. */
+const challengeTile = (n: number) => <span className="text-4xl font-extrabold">{n}</span>
+
+/** Thu nhỏ icon khi số lượng lớn để minh họa không bị tràn thẻ. */
+const iconSizeFor = (n: number) => (n > 12 ? 20 : n > 6 ? 26 : 32)
+
+/** Phép tính cỡ lớn hiển thị dưới phần minh họa. */
+const challengeExpr = (text: string) => (
+  <span className="text-4xl font-extrabold text-slate-700">{text}</span>
+)
+
+/** Ô "?" cho dạng tìm số còn thiếu. */
+const missingBox = (
+  <span className="inline-flex h-12 min-w-12 items-center justify-center rounded-2xl border-4 border-dashed border-indigo-300 px-1 text-3xl font-extrabold text-indigo-400">
+    ?
+  </span>
+)
+
+/**
+ * Sinh đúng 4 đáp án số: đáp án đúng + 3 số nhiễu gần đó (đã trộn). Tự nới biên
+ * `[min, max]` nếu khoảng quá hẹp để chắc chắn lấy đủ 4 giá trị khác nhau.
+ */
+function numberOptions4(answer: number, min: number, max: number): GameOption[] {
+  let lo = min
+  let hi = max
+  // Cần ít nhất 4 số nguyên trong khoảng để đủ đáp án.
+  while (hi - lo < 3) {
+    hi += 1
+    if (lo > 0) lo -= 1
+  }
+  const values = new Set<number>([answer])
+  while (values.size < 4) {
+    const delta = randInt(1, 5) * (Math.random() < 0.5 ? -1 : 1)
+    const v = answer + delta
+    if (v >= lo && v <= hi) values.add(v)
+  }
+  return shuffle([...values]).map((v) => ({ id: String(v), label: challengeTile(v) }))
+}
+
+/** Phép cộng trong phạm vi `max` — minh họa hai nhóm đồ vật gộp lại. */
+function challengeAdd(max: number): ChallengeRound {
+  const a = randInt(1, max - 1)
+  const b = randInt(1, max - a)
+  const sum = a + b
+  const obj = pickObject()
+  const size = iconSizeFor(Math.max(a, b))
+  return {
+    question: (
+      <div className="flex flex-col items-center gap-4">
+        <div className="flex flex-wrap items-center justify-center gap-1.5">
+          <ObjectRow count={a} obj={obj} size={size} />
+          <Op>+</Op>
+          <ObjectRow count={b} obj={obj} size={size} />
+        </div>
+        {challengeExpr(`${a} + ${b} = ?`)}
+      </div>
+    ),
+    options: numberOptions4(sum, 0, max),
+    answerId: String(sum),
+  }
+}
+
+/** Phép trừ trong phạm vi `max` — minh họa số đồ vật bị gạch bỏ. */
+function challengeSub(max: number): ChallengeRound {
+  const a = randInt(2, max)
+  const b = randInt(1, a - 1)
+  const diff = a - b
+  const obj = pickObject()
+  return {
+    question: (
+      <div className="flex flex-col items-center gap-4">
+        <ObjectRow count={a} obj={obj} crossed={b} size={iconSizeFor(a)} />
+        {challengeExpr(`${a} − ${b} = ?`)}
+      </div>
+    ),
+    options: numberOptions4(diff, 0, max),
+    answerId: String(diff),
+  }
+}
+
+/** Tìm số còn thiếu: a + ? = c (trong phạm vi `max`) — minh họa nhóm đã biết và tổng. */
+function challengeMissing(max: number): ChallengeRound {
+  const a = randInt(1, max - 1)
+  const missing = randInt(1, max - a)
+  const c = a + missing
+  const obj = pickObject()
+  const size = iconSizeFor(c)
+  return {
+    question: (
+      <div className="flex flex-col items-center gap-4">
+        <div className="flex flex-wrap items-center justify-center gap-1.5">
+          <ObjectRow count={a} obj={obj} size={size} />
+          <Op>+</Op>
+          {missingBox}
+          <Op>=</Op>
+          <ObjectRow count={c} obj={obj} size={size} />
+        </div>
+        {challengeExpr(`${a} + ? = ${c}`)}
+      </div>
+    ),
+    options: numberOptions4(missing, 0, max),
+    answerId: String(missing),
+  }
+}
+
+const oneOfChallenge = (gens: ChallengeGenerator[]): ChallengeRound =>
+  gens[randInt(0, gens.length - 1)]()
+
+/**
+ * Game thử thách: độ khó tăng dần sau mỗi 3 câu (`stage = ⌊level / 3⌋`):
+ *   0. Cộng trong phạm vi 5
+ *   1. Trừ trong phạm vi 5
+ *   2. Cộng trong phạm vi 10
+ *   3. Trừ trong phạm vi 10
+ *   4. Tìm số còn thiếu trong phạm vi 10
+ *   5. Cộng / trừ trong phạm vi 20
+ *   6+. Trộn nâng cao trong phạm vi 20 (cộng, trừ, tìm số thiếu)
+ */
+export const CHALLENGE_QUESTIONS_PER_STAGE = 3
+
+const CHALLENGE_STAGES: ChallengeGenerator[] = [
+  () => challengeAdd(5),
+  () => challengeSub(5),
+  () => challengeAdd(10),
+  () => challengeSub(10),
+  () => challengeMissing(10),
+  () => oneOfChallenge([() => challengeAdd(20), () => challengeSub(20)]),
+  () =>
+    oneOfChallenge([() => challengeAdd(20), () => challengeSub(20), () => challengeMissing(20)]),
+]
+
+export function generateChallenge(level = 0): ChallengeRound {
+  const stage = Math.min(
+    Math.floor(level / CHALLENGE_QUESTIONS_PER_STAGE),
+    CHALLENGE_STAGES.length - 1,
+  )
+  return CHALLENGE_STAGES[stage]()
 }
