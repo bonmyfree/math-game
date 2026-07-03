@@ -14,6 +14,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { useCoinsStore } from '@/shared/stores'
 
+import { Celebration } from './celebrationEffects'
+import { getSelectedCelebration } from './celebrations'
 import { isMuted, playCorrect, playEnter, playWrong, setMuted, stopCorrect } from './sounds'
 
 import type { GameOption, GameRound, RoundGenerator } from './types'
@@ -36,21 +38,14 @@ type Props = {
    * đủ sẽ hiện màn chúc mừng. Bỏ trống → game chơi không giới hạn (vô tận).
    */
   totalRounds?: number
+  /** Lớp đang chơi — dùng để quay lại đúng danh sách game của lớp. */
+  grade?: string
 }
 
 type DragState = { id: string; label: ReactNode; x: number; y: number } | null
 type Status = 'idle' | 'correct' | 'wrong'
 
-/** Dải pháo giấy cho màn chúc mừng (màu + lệch ngang + thời lượng khác nhau). */
-const CONFETTI = Array.from({ length: 24 }, (_, i) => ({
-  left: (i * 37) % 100,
-  color: ['bg-rose-400', 'bg-amber-400', 'bg-emerald-400', 'bg-sky-400', 'bg-violet-400'][i % 5],
-  delay: (i % 8) * 0.25,
-  duration: 2.2 + (i % 5) * 0.4,
-  size: 8 + (i % 3) * 4,
-}))
-
-export function DragDropGame({ title, subtitle, generate, totalRounds }: Props) {
+export function DragDropGame({ title, subtitle, generate, totalRounds, grade = '1' }: Props) {
   const navigate = useNavigate()
   const addCoins = useCoinsStore((s) => s.addCoins)
 
@@ -218,7 +213,7 @@ export function DragDropGame({ title, subtitle, generate, totalRounds }: Props) 
       <div className="relative mb-4 flex items-center gap-2">
         <button
           type="button"
-          onClick={() => navigate({ to: '/games/$grade', params: { grade: '1' } })}
+          onClick={() => navigate({ to: '/games/$grade', params: { grade } })}
           aria-label="Quay lại"
           className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-slate-600 shadow-sm transition-colors hover:bg-slate-50 active:scale-95"
         >
@@ -321,25 +316,8 @@ export function DragDropGame({ title, subtitle, generate, totalRounds }: Props) 
       {/* Màn chúc mừng chiến thắng */}
       {won && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-6 backdrop-blur-sm">
-          {/* Pháo giấy rơi */}
-          <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-            {CONFETTI.map((c, i) => (
-              <span
-                key={i}
-                className={`animate-game-confetti absolute top-0 rounded-sm ${c.color}`}
-                style={{
-                  left: `${c.left}%`,
-                  width: c.size,
-                  height: c.size,
-                  animationDelay: `${c.delay}s`,
-                  animationDuration: `${c.duration}s`,
-                }}
-              />
-            ))}
-          </div>
-
           {/* Thẻ chúc mừng */}
-          <div className="animate-game-pop relative w-full max-w-xs rounded-[2rem] bg-white p-7 text-center shadow-2xl">
+          <div className="animate-game-pop relative z-0 w-full max-w-xs rounded-[2rem] bg-white p-7 text-center shadow-2xl">
             <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-orange-500 shadow-lg">
               <Trophy size={40} className="text-white" strokeWidth={2.2} />
             </div>
@@ -364,7 +342,7 @@ export function DragDropGame({ title, subtitle, generate, totalRounds }: Props) 
             <div className="mt-6 flex gap-3">
               <button
                 type="button"
-                onClick={() => navigate({ to: '/games/$grade', params: { grade: '1' } })}
+                onClick={() => navigate({ to: '/games/$grade', params: { grade } })}
                 className="flex flex-1 items-center justify-center gap-1.5 rounded-2xl bg-slate-100 px-4 py-3 font-bold text-slate-600 transition-colors hover:bg-slate-200 active:scale-95"
               >
                 <Home size={18} />
@@ -379,6 +357,11 @@ export function DragDropGame({ title, subtitle, generate, totalRounds }: Props) 
                 Chơi lại
               </button>
             </div>
+          </div>
+
+          {/* Pháo hoa nằm trên cùng (đè lên cả thẻ), không chặn thao tác chạm */}
+          <div className="pointer-events-none absolute inset-0 z-10">
+            <Celebration id={getSelectedCelebration()} />
           </div>
         </div>
       )}

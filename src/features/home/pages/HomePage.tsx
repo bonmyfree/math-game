@@ -78,15 +78,18 @@ export default function HomePage() {
                 strokeWidth={1.5}
               />
 
-              {/* Hàng trên: số lớp (trái) + icon huy hiệu (phải) */}
-              <div className="relative flex items-start justify-between">
+              {/* Hàng trên: số lớp (trái) + icon huy hiệu (phải).
+                  Dùng w-full + ml-auto thay vì phụ thuộc justify-between vì
+                  Safari iOS đôi khi không kéo giãn flex item con của flex-col
+                  hết chiều rộng → badge bị dồn vào trong. */}
+              <div className="relative flex w-full items-start justify-between">
                 <div>
                   <p className="text-[11px] font-semibold uppercase tracking-wider text-white/80">
                     {t('home.gradeLabel')}
                   </p>
                   <p className="text-5xl font-black leading-none">{grade}</p>
                 </div>
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/25 ring-1 ring-white/40">
+                <span className="ml-auto flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/25 ring-1 ring-white/40">
                   <Icon size={22} strokeWidth={2.2} />
                 </span>
               </div>

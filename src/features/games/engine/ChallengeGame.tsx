@@ -71,6 +71,8 @@ type Props = {
   subtitle: string
   /** Hàm sinh câu hỏi trắc nghiệm theo bậc độ khó. */
   generate: ChallengeGenerator
+  /** Lớp đang chơi — dùng để quay lại đúng danh sách game của lớp. */
+  grade?: string
 }
 
 type EndReason = 'time' | 'lives'
@@ -82,7 +84,7 @@ function formatTime(total: number): string {
   return `${m}:${s.toString().padStart(2, '0')}`
 }
 
-export function ChallengeGame({ title, subtitle, generate }: Props) {
+export function ChallengeGame({ title, subtitle, generate, grade = '1' }: Props) {
   const navigate = useNavigate()
   const addCoins = useCoinsStore((s) => s.addCoins)
 
@@ -224,7 +226,7 @@ export function ChallengeGame({ title, subtitle, generate }: Props) {
       <div className="relative mb-3 flex items-center gap-2">
         <button
           type="button"
-          onClick={() => navigate({ to: '/games/$grade', params: { grade: '1' } })}
+          onClick={() => navigate({ to: '/games/$grade', params: { grade } })}
           aria-label="Quay lại"
           className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-slate-600 shadow-sm transition-colors hover:bg-slate-50 active:scale-95"
         >
@@ -384,7 +386,7 @@ export function ChallengeGame({ title, subtitle, generate }: Props) {
             <div className="mt-6 flex gap-3">
               <button
                 type="button"
-                onClick={() => navigate({ to: '/games/$grade', params: { grade: '1' } })}
+                onClick={() => navigate({ to: '/games/$grade', params: { grade } })}
                 className="flex flex-1 items-center justify-center gap-1.5 rounded-2xl bg-slate-100 px-3 py-3 text-sm font-bold whitespace-nowrap text-slate-600 transition-colors hover:bg-slate-200 active:scale-95"
               >
                 <Home size={18} className="shrink-0" />

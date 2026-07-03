@@ -140,11 +140,27 @@ function getFallbackAudio(): HTMLAudioElement | null {
 // lại sau một lúc. Vì vậy ta resume context ở MỌI thao tác (không gỡ listener),
 // để khi vào game / trả lời đúng, context chắc chắn đang chạy.
 let audioInitialized = false
+let audioUnlocked = false
 
 function unlockAudio() {
   const c = getCtx()
   if (!c) return
   if (c.state === 'suspended') void c.resume()
+  // QUAN TRỌNG cho iOS: chỉ gọi resume() là CHƯA đủ để có tiếng. iOS chỉ thực
+  // sự mở khóa đầu ra audio khi có một buffer được PHÁT bên trong cử chỉ người
+  // dùng. Ta phát một buffer câm (1 sample) để "mồi" pipeline. Không làm bước
+  // này thì mọi âm thanh bị câm cho tới khi người dùng bấm một nút click nào đó.
+  if (!audioUnlocked) {
+    try {
+      const src = c.createBufferSource()
+      src.buffer = c.createBuffer(1, 1, 22050)
+      src.connect(c.destination)
+      src.start(0)
+      audioUnlocked = true
+    } catch {
+      // Bỏ qua nếu trình duyệt không cho tạo/phát buffer.
+    }
+  }
   void loadYeahBuffer(c)
 }
 
@@ -153,9 +169,20 @@ export function initAudio() {
   audioInitialized = true
   const handler = () => unlockAudio()
   // Không gỡ listener: cần resume lại mỗi khi context bị trình duyệt treo.
+  // Nghe nhiều loại cử chỉ vì iOS Safari đòi hỏi touchend/click để mở khóa
+  // audio (touchstart/pointerdown đơn thuần đôi khi không đủ).
   window.addEventListener('pointerdown', handler, { passive: true })
   window.addEventListener('touchstart', handler, { passive: true })
+  window.addEventListener('touchend', handler, { passive: true })
+  window.addEventListener('click', handler)
   window.addEventListener('keydown', handler)
+  // iOS tự treo AudioContext khi chuyển trang / khóa màn hình. Khi quay lại,
+  // resume để lần vào game kế tiếp có tiếng ngay.
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && ctx && ctx.state === 'suspended') {
+      void ctx.resume()
+    }
+  })
 }
 
 /** Khen khi trả lời đúng — phát tiếng reo "yeah". */

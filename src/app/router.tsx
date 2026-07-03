@@ -15,6 +15,8 @@ import {
   QuizGamePage,
   PlayGamePage,
   ChallengeGamePage,
+  GradePlayPage,
+  GradeChallengePage,
   FireworksShowcasePage,
   DocumentsPage,
   RanksPage,
@@ -120,6 +122,20 @@ const challengeGameRoute = createRoute({
   component: ChallengeGamePage,
 })
 
+// Game tổng hợp cho các lớp 2–5 (route param). Đường dẫn tĩnh của Lớp 1 ở trên
+// vẫn được ưu tiên khớp trước các route param này.
+const gradePlayRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: '/games/$grade/play',
+  component: GradePlayPage,
+})
+
+const gradeChallengeRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: '/games/$grade/challenge',
+  component: GradeChallengePage,
+})
+
 // Trang xem & chọn hiệu ứng pháo hoa ăn mừng.
 const fireworksShowcaseRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
@@ -197,6 +213,8 @@ const routeTree = rootRoute.addChildren([
     quizGameRoute,
     playGameRoute,
     challengeGameRoute,
+    gradePlayRoute,
+    gradeChallengeRoute,
     fireworksShowcaseRoute,
     documentsRoute,
     ranksRoute,

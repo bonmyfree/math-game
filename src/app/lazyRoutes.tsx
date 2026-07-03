@@ -44,6 +44,13 @@ export const PlayGamePage = withSuspense(lazy(() => import('@/features/games/pag
 export const ChallengeGamePage = withSuspense(
   lazy(() => import('@/features/games/pages/ChallengeGamePage')),
 )
+// Game tổng hợp cho các lớp 2–5 (đọc `grade` từ route param).
+export const GradePlayPage = withSuspense(
+  lazy(() => import('@/features/games/pages/GradePlayPage')),
+)
+export const GradeChallengePage = withSuspense(
+  lazy(() => import('@/features/games/pages/GradeChallengePage')),
+)
 export const FireworksShowcasePage = withSuspense(
   lazy(() => import('@/features/games/pages/FireworksShowcasePage')),
 )
