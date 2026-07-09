@@ -11,6 +11,10 @@ const en: I18nKeys = {
   'auth.login.subtitle': 'Sign in to your account',
   'auth.login.button': 'Sign In',
   'auth.login.loading': 'Signing in...',
+  'auth.login.appName': 'Math Game',
+  'auth.login.tagline': 'Learn math the fun way with games! ✨',
+  'auth.login.cardSubtitle': 'Sign in to start playing!',
+  'auth.login.footerInfo': "Let's explore the magical world of numbers! 🚀",
   'auth.changePassword': 'Change Password',
   'auth.accountInfo': 'Account Info',
 

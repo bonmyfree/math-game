@@ -52,25 +52,41 @@ export default function LoginPage() {
       <style>{styles}</style>
 
       <div className="login-page-scope loginRoot">
+        {/* Floating math symbols in the background */}
+        <div className="mathBg" aria-hidden="true">
+          <span className="floatSym s1">+</span>
+          <span className="floatSym s2">−</span>
+          <span className="floatSym s3">×</span>
+          <span className="floatSym s4">÷</span>
+          <span className="floatSym s5">=</span>
+          <span className="floatSym s6">7</span>
+          <span className="floatSym s7">?</span>
+          <span className="floatSym s8">√</span>
+        </div>
+
         <div className="loginPanel">
           <div className="loginContainer">
-            {/* Mobile header */}
-            <div className="mobileHeader">
-              <h1 className="mobileTitle">{t('auth.login')}</h1>
-              <p className="mobileSubtitle">
-                {t('auth.login.mobileSubtitle', {
-                  defaultValue: 'Document management system',
+            {/* Brand hero */}
+            <div className="brandHero">
+              <div className="mascot" aria-hidden="true">
+                🧮
+              </div>
+              <h1 className="brandTitle">
+                {t('auth.login.appName', { defaultValue: 'Game Toán Học' })}
+              </h1>
+              <p className="brandTagline">
+                {t('auth.login.tagline', {
+                  defaultValue: 'Học toán thật vui cùng những trò chơi! ✨',
                 })}
               </p>
             </div>
 
             <div className="card">
-              {/* Desktop header */}
-              <div className="desktopHeader">
-                <h2 className="desktopTitle">{t('auth.login')}</h2>
-                <p className="desktopSubtitle">
-                  {t('auth.login.desktopSubtitle', {
-                    defaultValue: 'Please sign in with your account',
+              <div className="cardHeader">
+                <h2 className="cardTitle">{t('auth.login')}</h2>
+                <p className="cardSubtitle">
+                  {t('auth.login.cardSubtitle', {
+                    defaultValue: 'Đăng nhập để bắt đầu chơi nhé!',
                   })}
                 </p>
               </div>
@@ -145,7 +161,7 @@ export default function LoginPage() {
 
               <div className="footerInfo">
                 {t('auth.login.footerInfo', {
-                  defaultValue: 'This system uses centralized authentication for security.',
+                  defaultValue: 'Cùng khám phá thế giới những con số kỳ diệu nào! 🚀',
                 })}
               </div>
             </div>

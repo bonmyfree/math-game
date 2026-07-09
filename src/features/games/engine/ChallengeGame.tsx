@@ -36,7 +36,7 @@ const COINS_PER_CORRECT = 1
 /** Số mạng (trái tim) mỗi lượt chơi. */
 const TOTAL_LIVES = 5
 /** Thời gian đếm ngược cho mỗi lượt chơi (giây). */
-const TOTAL_SECONDS = 5
+const TOTAL_SECONDS = 180
 /** Số câu mỗi bậc độ khó (đồng bộ với generator). */
 const QUESTIONS_PER_STAGE = 3
 /** Nhãn cho 4 lựa chọn. */

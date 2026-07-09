@@ -1,16 +1,123 @@
-/* Scoped under `.login-page-scope` (root also has `.loginRoot`) so names like `.card` are not global. */
+/* Scoped under `.login-page-scope` (root also has `.loginRoot`) so names like `.card` are not global.
+   Theme: "Game Toán Học" — vui nhộn, nhiều màu, dành cho học sinh tiểu học. Mobile-first (~430px). */
 .login-page-scope.loginRoot {
+  position: relative;
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
-  background: var(--login-bg);
+  overflow: hidden;
+  background: linear-gradient(160deg, #6366f1 0%, #8b5cf6 46%, #ec4899 100%);
+}
+
+/* Soft color glows for depth behind the card */
+.login-page-scope.loginRoot::before,
+.login-page-scope.loginRoot::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: 0;
+}
+.login-page-scope.loginRoot::before {
+  width: 300px;
+  height: 300px;
+  top: -90px;
+  left: -70px;
+  background: #38bdf8;
+}
+.login-page-scope.loginRoot::after {
+  width: 360px;
+  height: 360px;
+  bottom: -130px;
+  right: -90px;
+  background: #fbbf24;
+}
+
+/* Floating math symbols */
+.login-page-scope .mathBg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.login-page-scope .floatSym {
+  position: absolute;
+  color: rgba(255, 255, 255, 0.24);
+  font-weight: 800;
+  line-height: 1;
+  user-select: none;
+  animation: floatSym 7s ease-in-out infinite;
+}
+.login-page-scope .floatSym.s1 {
+  top: 8%;
+  left: 9%;
+  font-size: 56px;
+  animation-delay: 0s;
+}
+.login-page-scope .floatSym.s2 {
+  top: 18%;
+  right: 11%;
+  font-size: 40px;
+  animation-delay: 0.8s;
+}
+.login-page-scope .floatSym.s3 {
+  top: 44%;
+  left: 5%;
+  font-size: 34px;
+  animation-delay: 1.6s;
+}
+.login-page-scope .floatSym.s4 {
+  bottom: 24%;
+  right: 8%;
+  font-size: 52px;
+  animation-delay: 0.4s;
+}
+.login-page-scope .floatSym.s5 {
+  bottom: 9%;
+  left: 15%;
+  font-size: 44px;
+  animation-delay: 2.1s;
+}
+.login-page-scope .floatSym.s6 {
+  top: 11%;
+  right: 32%;
+  font-size: 30px;
+  animation-delay: 1.2s;
+}
+.login-page-scope .floatSym.s7 {
+  bottom: 33%;
+  left: 33%;
+  font-size: 30px;
+  animation-delay: 2.6s;
+}
+.login-page-scope .floatSym.s8 {
+  top: 64%;
+  right: 20%;
+  font-size: 38px;
+  animation-delay: 3.1s;
+}
+
+@keyframes floatSym {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-6deg);
+  }
+  50% {
+    transform: translateY(-22px) rotate(6deg);
+  }
 }
 
 .login-page-scope .loginPanel {
+  position: relative;
+  z-index: 1;
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: 24px 20px;
 }
 
 .login-page-scope .loginContainer {
@@ -18,45 +125,83 @@
   max-width: 420px;
 }
 
-.login-page-scope .mobileHeader {
+/* Brand hero (mascot + tên app) */
+.login-page-scope .brandHero {
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: 22px;
 }
-
-.login-page-scope .mobileTitle {
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--login-text-strong);
-  margin: 10px 0 8px 0;
+.login-page-scope .mascot {
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 50px;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow:
+    0 14px 34px -8px rgba(23, 15, 60, 0.5),
+    inset 0 0 0 4px rgba(255, 255, 255, 0.55);
+  animation: mascotBounce 3s ease-in-out infinite;
 }
-
-.login-page-scope .mobileSubtitle {
-  color: var(--login-text-muted);
+@keyframes mascotBounce {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-3deg);
+  }
+  50% {
+    transform: translateY(-9px) rotate(3deg);
+  }
+}
+.login-page-scope .brandTitle {
+  margin: 0 0 6px;
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: -0.4px;
+  color: #ffffff;
+  text-shadow: 0 3px 14px rgba(23, 15, 60, 0.28);
+}
+.login-page-scope .brandTagline {
   margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.94);
 }
 
+/* Card */
 .login-page-scope .card {
-  background: var(--login-white);
-  border-radius: var(--login-card-radius);
-  box-shadow: var(--login-card-shadow-1), var(--login-card-shadow-2);
-  padding: 32px;
+  position: relative;
+  background: #ffffff;
+  border-radius: 26px;
+  box-shadow: 0 26px 52px -14px rgba(23, 15, 60, 0.5);
+  padding: 26px 22px 22px;
+  overflow: hidden;
+}
+.login-page-scope .card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, #f43f5e, #f59e0b, #10b981, #3b82f6, #8b5cf6);
 }
 
-.login-page-scope .desktopHeader {
-  display: none;
-  margin-bottom: 28px;
+.login-page-scope .cardHeader {
+  text-align: center;
+  margin: 6px 0 20px;
 }
-
-.login-page-scope .desktopTitle {
-  margin: 0 0 8px 0;
-  font-size: 22px;
+.login-page-scope .cardTitle {
+  margin: 0 0 4px;
+  font-size: 20px;
   font-weight: 800;
-  color: var(--login-text-strong);
+  color: #1e1b4b;
 }
-
-.login-page-scope .desktopSubtitle {
+.login-page-scope .cardSubtitle {
   margin: 0;
-  color: var(--login-text-muted);
+  font-size: 13.5px;
+  color: #6b7280;
 }
 
 .login-page-scope .form {
@@ -64,12 +209,34 @@
   gap: 16px;
 }
 
+/* Bigger, friendlier touch targets for mobile (≥44px, 16px text avoids iOS zoom) */
+.login-page-scope .form input {
+  height: 48px;
+  border-radius: 13px;
+  font-size: 16px;
+}
+.login-page-scope form button[type='submit'] {
+  min-height: 50px;
+  border-radius: 15px;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  margin-top: 4px;
+  background-image: linear-gradient(90deg, #8b5cf6, #ec4899);
+  box-shadow: 0 14px 26px -10px rgba(236, 72, 153, 0.65);
+}
+.login-page-scope form button[type='submit']:hover:not(:disabled) {
+  background-image: linear-gradient(90deg, #7c3aed, #db2777);
+  transform: translateY(-1px);
+}
+
 .login-page-scope .footerInfo {
-  margin-top: 28px;
-  padding-top: 18px;
-  border-top: 1px solid var(--login-border);
-  color: var(--login-text-subtle);
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px dashed #e5e7eb;
+  color: #94a3b8;
   font-size: 12px;
+  font-weight: 500;
   text-align: center;
 }
 
@@ -77,13 +244,22 @@
   .login-page-scope .loginPanel {
     padding: 48px;
   }
-  .login-page-scope .mobileHeader {
-    display: none;
-  }
-  .login-page-scope .desktopHeader {
-    display: block;
-  }
   .login-page-scope .card {
-    padding: 40px;
+    padding: 32px 30px 26px;
+  }
+  .login-page-scope .brandTitle {
+    font-size: 34px;
+  }
+  .login-page-scope .mascot {
+    width: 104px;
+    height: 104px;
+    font-size: 54px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-page-scope .floatSym,
+  .login-page-scope .mascot {
+    animation: none;
   }
 }

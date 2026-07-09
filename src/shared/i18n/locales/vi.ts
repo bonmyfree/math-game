@@ -9,6 +9,10 @@ const vi = {
   'auth.login.subtitle': 'Đăng nhập vào tài khoản của bạn',
   'auth.login.button': 'Đăng nhập',
   'auth.login.loading': 'Đang đăng nhập...',
+  'auth.login.appName': 'Game Toán Học',
+  'auth.login.tagline': 'Học toán thật vui cùng những trò chơi! ✨',
+  'auth.login.cardSubtitle': 'Đăng nhập để bắt đầu chơi nhé!',
+  'auth.login.footerInfo': 'Cùng khám phá thế giới những con số kỳ diệu nào! 🚀',
   'auth.changePassword': 'Đổi mật khẩu',
   'auth.accountInfo': 'Thông tin tài khoản',
 
