@@ -17,6 +17,7 @@ import {
   ChallengeGamePage,
   GradePlayPage,
   GradeChallengePage,
+  GradeFightingPage,
   FireworksShowcasePage,
   DocumentsPage,
   RanksPage,
@@ -136,6 +137,12 @@ const gradeChallengeRoute = createRoute({
   component: GradeChallengePage,
 })
 
+const gradeVersusRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: '/games/$grade/versus',
+  component: GradeFightingPage,
+})
+
 // Trang xem & chọn hiệu ứng pháo hoa ăn mừng.
 const fireworksShowcaseRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
@@ -215,6 +222,7 @@ const routeTree = rootRoute.addChildren([
     challengeGameRoute,
     gradePlayRoute,
     gradeChallengeRoute,
+    gradeVersusRoute,
     fireworksShowcaseRoute,
     documentsRoute,
     ranksRoute,

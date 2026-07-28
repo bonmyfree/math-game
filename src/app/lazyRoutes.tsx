@@ -51,6 +51,9 @@ export const GradePlayPage = withSuspense(
 export const GradeChallengePage = withSuspense(
   lazy(() => import('@/features/games/pages/GradeChallengePage')),
 )
+export const GradeFightingPage = withSuspense(
+  lazy(() => import('@/features/games/pages/GradeFightingPage')),
+)
 export const FireworksShowcasePage = withSuspense(
   lazy(() => import('@/features/games/pages/FireworksShowcasePage')),
 )

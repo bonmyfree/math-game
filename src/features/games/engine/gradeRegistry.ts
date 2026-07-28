@@ -22,11 +22,20 @@ type ChallengeConfig = {
   generate: ChallengeGenerator
 }
 
+/** Đối kháng tái dùng generator trắc nghiệm (cùng dạng câu với thử thách). */
+type VersusConfig = {
+  title: string
+  subtitle: string
+  listDesc: string
+  generate: ChallengeGenerator
+}
+
 export type GradeGames = {
   /** Mô tả trọng tâm kiến thức của lớp (hiển thị dưới tiêu đề). */
   focus: string
   play: PlayConfig
   challenge: ChallengeConfig
+  versus: VersusConfig
 }
 
 /**
@@ -49,6 +58,12 @@ export const GRADE_GAMES: Record<string, GradeGames> = {
       listDesc: 'Chọn đáp án A, B, C, D — cộng trừ, nhân chia, tìm số còn thiếu',
       generate: grade2.generateChallenge,
     },
+    versus: {
+      title: 'Game đối kháng',
+      subtitle: '2 người · chia màn hình · ai đúng trước thắng',
+      listDesc: 'Hai người đấu nhau — nhập tên rồi đua chọn đáp án',
+      generate: grade2.generateChallenge,
+    },
   },
   '3': {
     focus: 'Cộng trừ trong 1000 · Bảng nhân, chia đến 9 · Chu vi',
@@ -63,6 +78,12 @@ export const GRADE_GAMES: Record<string, GradeGames> = {
       title: 'Thử thách toán',
       subtitle: '5 mạng · độ khó tăng dần',
       listDesc: 'Chọn đáp án A, B, C, D — nhân chia đến 9, nhân số lớn, chu vi',
+      generate: grade3.generateChallenge,
+    },
+    versus: {
+      title: 'Game đối kháng',
+      subtitle: '2 người · chia màn hình · ai đúng trước thắng',
+      listDesc: 'Hai người đấu nhau — nhập tên rồi đua chọn đáp án',
       generate: grade3.generateChallenge,
     },
   },
@@ -81,6 +102,12 @@ export const GRADE_GAMES: Record<string, GradeGames> = {
       listDesc: 'Chọn đáp án A, B, C, D — dấu hiệu chia hết, phân số, diện tích',
       generate: grade4.generateChallenge,
     },
+    versus: {
+      title: 'Game đối kháng',
+      subtitle: '2 người · chia màn hình · ai đúng trước thắng',
+      listDesc: 'Hai người đấu nhau — nhập tên rồi đua chọn đáp án',
+      generate: grade4.generateChallenge,
+    },
   },
   '5': {
     focus: 'Số thập phân · Tỉ số phần trăm · Diện tích, thể tích · Vận tốc',
@@ -95,6 +122,12 @@ export const GRADE_GAMES: Record<string, GradeGames> = {
       title: 'Thử thách toán',
       subtitle: '5 mạng · độ khó tăng dần',
       listDesc: 'Chọn đáp án A, B, C, D — thập phân, phần trăm, diện tích, vận tốc',
+      generate: grade5.generateChallenge,
+    },
+    versus: {
+      title: 'Game đối kháng',
+      subtitle: '2 người · chia màn hình · ai đúng trước thắng',
+      listDesc: 'Hai người đấu nhau — nhập tên rồi đua chọn đáp án',
       generate: grade5.generateChallenge,
     },
   },

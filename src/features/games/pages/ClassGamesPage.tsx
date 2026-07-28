@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from '@tanstack/react-router'
-import { ChevronLeft, ChevronRight, Hand, Zap } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Hand, Swords, Zap } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { TemplatePage } from '@/shared/pages/TemplatePage'
@@ -34,7 +34,7 @@ export default function ClassGamesPage() {
     icon: LucideIcon
     gradient: string
     glow: string
-    to: '/games/$grade/play' | '/games/$grade/challenge'
+    to: '/games/$grade/play' | '/games/$grade/challenge' | '/games/$grade/versus'
   }[] = [
     {
       id: 'dragdrop',
@@ -53,6 +53,15 @@ export default function ClassGamesPage() {
       gradient: 'from-amber-400 to-orange-500',
       glow: 'bg-amber-300',
       to: '/games/$grade/challenge',
+    },
+    {
+      id: 'versus',
+      name: games.versus.title,
+      desc: games.versus.listDesc,
+      icon: Swords,
+      gradient: 'from-rose-400 to-orange-500',
+      glow: 'bg-rose-300',
+      to: '/games/$grade/versus',
     },
   ]
 

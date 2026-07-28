@@ -251,6 +251,78 @@
   animation: game-pop-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
 }
 
+/* Nắm đấm bay vào avatar (game đối kháng). */
+@keyframes game-punch-fist {
+  0% {
+    transform: translate(-140%, 50%) scale(0.35) rotate(-50deg);
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  55% {
+    transform: translate(-5%, -5%) scale(1.4) rotate(8deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(30%, -40%) scale(0.85) rotate(28deg);
+    opacity: 0;
+  }
+}
+
+@keyframes game-punch-flash {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  35% {
+    opacity: 0.55;
+  }
+}
+
+/* Co giật mặt lúc vừa trúng đấm (mức sưng bền dùng transform tĩnh). */
+@keyframes game-face-swell-hit {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(1.08, 1.14);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes game-punch-stars {
+  0% {
+    transform: translate(0, 8px) scale(0.4);
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(10px, -18px) scale(1.1);
+    opacity: 0;
+  }
+}
+
+.animate-game-punch-fist {
+  animation: game-punch-fist 0.5s ease-out forwards;
+}
+
+.animate-game-punch-flash {
+  animation: game-punch-flash 0.45s ease-out forwards;
+}
+
+.animate-game-face-swell-hit {
+  animation: game-face-swell-hit 0.4s ease-out;
+}
+
+.animate-game-punch-stars {
+  animation: game-punch-stars 0.7s ease-out forwards;
+}
+
 /* Pháo giấy rơi cho màn chúc mừng chiến thắng. */
 @keyframes game-confetti {
   0% {
